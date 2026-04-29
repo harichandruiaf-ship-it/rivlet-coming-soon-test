@@ -1,0 +1,34 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor
+.DS_Store
+.env
+.env.*.local
+
+# Vercel
+.vercel
+
+# Firebase Admin key file (local only; use FIREBASE_SERVICE_ACCOUNT_PATH in .env.local)
+.firebase-service-account.json
+
+# Vite resolves vite.config.js before .ts — keep only vite.config.ts in the repo.
+vite.config.js
+
+# Stray JS emit next to TypeScript sources (use .ts only)
+api/subscribe.js
+server/subscribeLogic.js
+server/emailTemplates/*.js
+
+# Not referenced by the app
+uploads/
+
+# Local IDE / agent settings
+.claude/

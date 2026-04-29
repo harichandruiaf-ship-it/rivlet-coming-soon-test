@@ -1,0 +1,1209 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>RIVLET — Move like you mean it.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Inter:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --ink:#0E0B07;
+    --ink-70:rgba(14,11,7,.70);
+    --ink-50:rgba(14,11,7,.50);
+    --ink-30:rgba(14,11,7,.30);
+    --ink-10:rgba(14,11,7,.10);
+    --bg:#FFFFFF;
+    --bg-soft:#F6F4EF;
+    --gold:#C4963A;
+    --cardamom:#7A5C3A;
+    --navy:#0C1E34;
+    --sand:#F2EDE3;
+    --linen:#FDFAF4;
+
+    --display:"Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+    --serif:"Cormorant Garamond", Georgia, serif;
+    --mono:"DM Mono", ui-monospace, SFMono-Regular, monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--bg);color:var(--ink);font-family:var(--display);font-weight:400;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;letter-spacing:-0.01em}
+  body{overflow-x:hidden}
+  ::selection{background:var(--ink);color:var(--bg)}
+  a{color:inherit;text-decoration:none}
+  button{font:inherit;cursor:pointer}
+
+  .wrap{max-width:80rem;margin:0 auto;padding:0 24px}
+
+  /* ---------- Animations ---------- */
+  @keyframes fadeInUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes fadeInOverlay{from{opacity:0}to{opacity:1}}
+  @keyframes fadeInDialog{from{opacity:0;transform:translate(-50%,-46%)}to{opacity:1;transform:translate(-50%,-50%)}}
+  .anim{opacity:0;animation:fadeInUp .7s cubic-bezier(.2,.7,.2,1) forwards}
+  .anim-overlay{animation:fadeInOverlay .35s ease-out forwards}
+  .anim-dialog{animation:fadeInDialog .55s cubic-bezier(.2,.7,.2,1) forwards}
+
+  /* ---------- Nav ---------- */
+  nav.top{
+    padding:18px 24px;display:flex;align-items:center;justify-content:space-between;
+    max-width:80rem;margin:0 auto;
+  }
+  .brand{display:flex;align-items:center;gap:10px}
+  .brand-mark{
+    width:22px;height:22px;border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, var(--linen) 0%, var(--linen) 35%, var(--ink) 36%, var(--ink) 100%);
+    border:1.5px solid var(--ink);
+    box-shadow:0 0 0 0 rgba(196,150,58,.0), 0 0 14px rgba(196,150,58,.0);
+    transition:box-shadow .4s ease;
+  }
+  .brand:hover .brand-mark{box-shadow:0 0 0 1px rgba(196,150,58,.2), 0 0 14px rgba(196,150,58,.45)}
+  .brand-text{font-size:18px;font-weight:600;letter-spacing:-0.02em;color:var(--ink)}
+
+  .nav-links{display:none;align-items:center;gap:30px}
+  @media (min-width:880px){ .nav-links{display:flex} }
+  .nav-links a{font-size:14px;color:var(--ink-70);font-weight:500;display:inline-flex;align-items:center;gap:4px;transition:color .25s ease}
+  .nav-links a:hover{color:var(--ink)}
+  .chev{width:13px;height:13px;opacity:.7}
+
+  .nav-right{display:flex;align-items:center;gap:14px}
+  .login{font-size:14px;color:var(--ink-70);font-weight:500}
+  .login:hover{color:var(--ink)}
+  .pill{background:var(--ink);color:var(--bg);padding:10px 22px;border-radius:999px;font-size:14px;font-weight:500;border:0;transition:background .25s ease, transform .4s ease}
+  .pill:hover{background:#2a1d0e}
+  .pill.outline{background:transparent;color:var(--ink);border:1px solid var(--ink-10)}
+  .pill.outline:hover{background:var(--bg-soft);border-color:var(--ink-30)}
+
+  /* ---------- Hero ---------- */
+  .hero{padding:80px 24px 100px;max-width:80rem;margin:0 auto;text-align:center;position:relative}
+  .hero::before{
+    content:"";position:absolute;left:50%;top:0;transform:translateX(-50%);
+    width:1100px;max-width:120%;height:560px;pointer-events:none;z-index:-1;
+    background:radial-gradient(50% 60% at 50% 0%, rgba(196,150,58,.10) 0%, rgba(196,150,58,0) 70%);
+  }
+
+  .badge{
+    display:inline-flex;align-items:center;gap:10px;
+    padding:6px 14px 6px 8px;border:1px solid var(--ink-10);border-radius:999px;
+    font-size:13.5px;font-weight:500;color:var(--ink);
+    margin-bottom:32px;
+  }
+  .badge .sq{
+    width:24px;height:24px;border-radius:50%;
+    display:inline-flex;align-items:center;justify-content:center;
+    background:radial-gradient(circle at 30% 30%, #c4963a 0%, #8a6a2a 45%, #0E0B07 100%);
+    box-shadow:0 0 0 1px rgba(196,150,58,.35), 0 0 12px rgba(196,150,58,.35);
+  }
+  .badge .sq svg{width:13px;height:13px;color:#fff;filter:drop-shadow(0 0 2px rgba(255,236,200,.6))}
+
+  h1.hero-h{
+    font-family:var(--display);font-weight:400;
+    font-size:clamp(46px, 7.6vw, 92px);
+    line-height:1.04;letter-spacing:-0.035em;
+    margin-bottom:22px;
+  }
+  h1.hero-h .l1{display:block;color:var(--ink)}
+  h1.hero-h .l2{
+    display:block;
+    background:linear-gradient(90deg, #0E0B07 0%, #5b4a2c 45%, #c4963a 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    font-family:var(--serif);font-style:italic;font-weight:400;letter-spacing:-0.02em;
+  }
+
+  .hero-sub{
+    font-size:clamp(16px,1.3vw,19px);color:var(--ink-70);
+    max-width:46rem;margin:0 auto 32px;line-height:1.55;text-wrap:pretty;
+  }
+
+  .hero-cta{
+    background:var(--ink);color:var(--bg);
+    padding:14px 30px;border-radius:999px;
+    font-size:15px;font-weight:500;border:0;cursor:pointer;
+    transition:background .25s ease, transform .3s ease;
+    display:inline-flex;align-items:center;gap:10px;
+    margin-bottom:48px;
+  }
+  .hero-cta:hover{background:#2a1d0e}
+  .hero-cta .arr{width:16px;height:16px;transition:transform .35s ease}
+  .hero-cta:hover .arr{transform:translateX(3px)}
+
+  /* ---------- Tabs ---------- */
+  .tabs-wrap{display:flex;justify-content:center;margin-bottom:32px}
+  .tabs{
+    display:inline-flex;align-items:stretch;
+    background:var(--bg-soft);border-radius:14px;padding:5px;gap:0;
+    border:1px solid var(--ink-10);
+  }
+  .tab{
+    background:transparent;border:0;
+    padding:10px 18px;border-radius:10px;
+    font-size:14px;font-weight:500;color:var(--ink-70);
+    display:inline-flex;align-items:center;gap:8px;
+    transition:background .3s ease, color .3s ease, box-shadow .3s ease;
+    white-space:nowrap;
+  }
+  .tab .ico{width:16px;height:16px;opacity:.85}
+  .tab.active{background:var(--bg);color:var(--ink);box-shadow:0 1px 2px rgba(14,11,7,.06), 0 4px 12px rgba(14,11,7,.04)}
+  .tab-divider{width:1px;background:var(--ink-10);margin:6px 0;align-self:stretch}
+  .tab-divider.hide{visibility:hidden}
+  @media (max-width:760px){
+    .tabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:6px;width:100%;max-width:380px}
+    .tab-divider{display:none}
+    .tab{justify-content:center;width:100%}
+  }
+
+  /* ---------- Editorial showcase: two-column wardrobe ---------- */
+  .ed-show{
+    display:grid;grid-template-columns:1fr;gap:24px;
+    background:var(--bg-soft);
+    border-radius:24px;
+    padding:28px;
+    border:1px solid var(--ink-10);
+  }
+  @media (min-width:880px){ .ed-show{grid-template-columns:1fr 1.1fr;gap:36px;padding:40px} }
+  .ed-left .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--cardamom);margin-bottom:18px}
+  .ed-left h3.ed-title{
+    font-family:var(--display);font-weight:400;font-size:clamp(38px,4.8vw,58px);
+    line-height:1.0;letter-spacing:-0.035em;color:var(--ink);margin-bottom:18px;
+  }
+  .ed-left h3.ed-title em{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--cardamom)}
+  .ed-left .ed-sub{font-size:15px;color:var(--ink-70);line-height:1.55;max-width:36ch;margin-bottom:24px}
+  .ed-list{border-top:1px solid var(--ink-10);margin-top:8px}
+  .ed-row{
+    display:grid;grid-template-columns:48px 1fr;gap:16px;padding:18px 0;
+    border-bottom:1px solid var(--ink-10);
+    cursor:pointer;align-items:start;
+    transition:padding-left .35s ease, background .35s ease;
+  }
+  .ed-row:hover{padding-left:8px}
+  .ed-row.is-active{background:linear-gradient(90deg, rgba(196,150,58,.10), rgba(196,150,58,0) 70%)}
+  .ed-row .ed-num{font-family:var(--mono);font-size:11px;letter-spacing:.22em;color:var(--cardamom);padding-top:4px}
+  .ed-row .ed-num::before{content:"— "}
+  .ed-row .ed-rt{font-family:var(--display);font-weight:600;font-size:18px;color:var(--ink);letter-spacing:-0.01em;margin-bottom:4px}
+  .ed-row.is-active .ed-rt{color:var(--ink)}
+  .ed-row .ed-rb{font-size:14px;color:var(--ink-70);line-height:1.55;max-width:42ch}
+  /* right dark frame */
+  .ed-frame{
+    position:relative;border-radius:18px;overflow:hidden;
+    background:var(--navy);min-height:clamp(380px, 48vw, 520px);
+    border:1px solid rgba(7,17,30,.4);
+  }
+  .ed-frame .bg-img{
+    position:absolute;inset:0;
+    background-image:url("assets/fabric-1.jpg");
+    background-size:cover;background-position:center;
+    filter:saturate(.85) brightness(.78) contrast(1.05);
+    transform:scale(1.05);animation:slowDrift 22s ease-in-out infinite alternate;
+    transition:opacity .8s ease;
+  }
+  @keyframes slowDrift{0%{transform:scale(1.05) translate3d(0,0,0)}100%{transform:scale(1.10) translate3d(-1.5%,-1%,0)}}
+  .ed-frame .tint{
+    position:absolute;inset:0;
+    background:
+      radial-gradient(120% 70% at 50% 100%, rgba(7,17,30,.88) 0%, rgba(7,17,30,.55) 45%, rgba(7,17,30,.20) 80%),
+      linear-gradient(180deg, rgba(7,17,30,.30) 0%, rgba(7,17,30,.10) 40%, rgba(7,17,30,.70) 100%);
+  }
+  .ed-frame .ed-inner{
+    position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;
+    padding:40px;color:var(--bg);z-index:2;
+  }
+  .ed-frame .ed-eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:rgba(253,250,244,.65);margin-bottom:18px}
+  .ed-frame .ed-h{font-family:var(--display);font-weight:400;font-size:clamp(28px,3.6vw,44px);line-height:1.05;letter-spacing:-0.025em;color:var(--bg);margin-bottom:14px;max-width:18ch}
+  .ed-frame .ed-h em{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--gold)}
+  .ed-frame .ed-body{font-size:15px;color:rgba(253,250,244,.78);line-height:1.55;max-width:46ch;margin-bottom:24px}
+  .ed-frame .ed-cta{
+    display:inline-flex;align-items:center;gap:10px;align-self:flex-start;
+    background:transparent;border:0;padding:0;
+    font-family:var(--display);font-size:15px;font-weight:500;color:var(--bg);
+    cursor:pointer;
+  }
+  .ed-frame .ed-cta .arr{
+    width:36px;height:36px;border-radius:50%;background:rgba(253,250,244,.10);
+    display:inline-flex;align-items:center;justify-content:center;
+    transition:background .25s ease, transform .35s ease;
+  }
+  .ed-frame .ed-cta:hover .arr{background:rgba(253,250,244,.20);transform:translateX(2px)}
+  .ed-frame .corner{position:absolute;z-index:3;font-family:var(--mono);font-size:10.5px;letter-spacing:.22em;color:rgba(253,250,244,.6);text-transform:uppercase}
+  .ed-frame .corner.tl{top:22px;left:24px}
+  .ed-frame .corner.tr{top:22px;right:24px}
+  .ed-frame .corner.bl{bottom:22px;right:24px}
+
+  /* ---------- Mill marquee ---------- */
+  .mills{margin-top:96px;padding:32px 0;border-top:1px solid var(--ink-10);border-bottom:1px solid var(--ink-10);overflow:hidden}
+  .mills .label{font-family:var(--mono);font-size:11px;letter-spacing:.24em;color:var(--cardamom);text-transform:uppercase;text-align:center;margin-bottom:18px}
+  .m-track{display:flex;width:max-content;animation:marqueeMove 38s linear infinite}
+  @keyframes marqueeMove{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  .m-track:hover{animation-play-state:paused}
+  .m-item{margin:0 30px;flex-shrink:0;white-space:nowrap;color:var(--ink-50)}
+
+  /* ---------- Sections ---------- */
+  section.block{padding:96px 24px;max-width:80rem;margin:0 auto}
+  h2.disp{
+    font-family:var(--display);font-weight:400;
+    font-size:clamp(38px,5.6vw,68px);line-height:1.04;letter-spacing:-0.035em;
+    text-wrap:balance;
+  }
+  h2.disp em{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--cardamom)}
+  .lead{font-size:clamp(18px,1.4vw,22px);color:var(--ink-70);line-height:1.55;text-wrap:pretty}
+
+  /* ---------- Vision section (with fabric bg) ---------- */
+  .vision-section{position:relative;isolation:isolate}
+  .vision-section::before{
+    content:"";position:absolute;inset:0;z-index:-1;
+    background-image:url('assets/vision-fabric.jpg');
+    background-size:cover;background-position:center;background-repeat:no-repeat;
+    /* Feather all four edges into the page bg */
+    -webkit-mask-image:
+      radial-gradient(120% 95% at 50% 50%, #000 45%, rgba(0,0,0,.65) 65%, rgba(0,0,0,0) 92%),
+      linear-gradient(to right, transparent 0%, #000 14%, #000 86%, transparent 100%),
+      linear-gradient(to bottom, transparent 0%, #000 12%, #000 88%, transparent 100%);
+    -webkit-mask-composite:source-in;
+            mask-image:
+      radial-gradient(120% 95% at 50% 50%, #000 45%, rgba(0,0,0,.65) 65%, rgba(0,0,0,0) 92%),
+      linear-gradient(to right, transparent 0%, #000 14%, #000 86%, transparent 100%),
+      linear-gradient(to bottom, transparent 0%, #000 12%, #000 88%, transparent 100%);
+            mask-composite:intersect;
+    opacity:.78;
+  }
+  .vision-section::after{
+    /* warm wash to harmonize fabric with page bg */
+    content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+    background:
+      radial-gradient(80% 60% at 50% 0%, rgba(255,255,255,.55) 0%, rgba(255,255,255,0) 70%),
+      radial-gradient(80% 60% at 50% 100%, rgba(255,255,255,.55) 0%, rgba(255,255,255,0) 70%);
+  }
+
+  /* ---------- 3-up vision ---------- */
+  .vision-grid{display:grid;grid-template-columns:1fr;gap:18px;margin-top:48px}
+  @media (min-width:760px){ .vision-grid{grid-template-columns:repeat(3,1fr)} }
+  .v-card{
+    background:rgba(255,255,255,.78);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+    border:1px solid rgba(255,255,255,.7);border-radius:20px;
+    padding:28px;display:flex;flex-direction:column;gap:14px;min-height:280px;
+    box-shadow:0 1px 0 rgba(255,255,255,.6) inset, 0 18px 40px -28px rgba(14,11,7,.18);
+    transition:transform .5s cubic-bezier(.2,.7,.2,1), box-shadow .5s ease, border-color .5s ease, background .5s ease;
+  }
+  .v-card:hover{transform:translateY(-4px);background:rgba(255,255,255,.92);box-shadow:0 24px 50px -28px rgba(14,11,7,.22);border-color:rgba(255,255,255,.9)}
+  .v-num{font-family:var(--mono);font-size:11px;letter-spacing:.22em;color:var(--cardamom);display:flex;justify-content:space-between;align-items:center}
+  .v-num .dash{flex:1;height:1px;background:var(--ink-10);margin:0 12px}
+  .v-card h3{font-family:var(--display);font-weight:500;font-size:24px;letter-spacing:-0.025em;line-height:1.15;color:var(--ink);margin-top:auto}
+  .v-card h3 em{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--cardamom)}
+  .v-card p{font-size:14.5px;color:var(--ink-70);line-height:1.6}
+
+  /* ---------- Difference (3 pillars) ---------- */
+  .diff{padding:96px 24px;border-top:1px solid var(--ink-10);max-width:80rem;margin:0 auto;position:relative}
+  .diff::before{content:"";position:absolute;top:-1px;left:50%;transform:translateX(-50%);width:120px;height:1px;background:var(--cardamom)}
+  .diff .head{display:grid;grid-template-columns:1fr;gap:24px;align-items:end;margin-bottom:56px}
+  @media (min-width:880px){ .diff .head{grid-template-columns:1.4fr 1fr} }
+  .diff .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--cardamom);margin-bottom:18px}
+  .diff .head h2{font-family:var(--display);font-weight:400;font-size:clamp(36px,5vw,64px);line-height:1.04;letter-spacing:-0.035em;color:var(--ink)}
+  .diff .head h2 em{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--cardamom)}
+  .diff .head .lede{font-size:16px;color:var(--ink-70);line-height:1.6;max-width:42ch;text-wrap:pretty;justify-self:end}
+  @media (max-width:879px){ .diff .head .lede{justify-self:start} }
+
+  .diff-grid{display:none}
+  .diff-card{display:none}
+  .diff-card-OLD{
+    position:relative;
+    background:var(--bg);border:1px solid var(--ink-10);border-radius:22px;
+    padding:32px;display:flex;flex-direction:column;gap:18px;min-height:420px;
+    transition:transform .55s cubic-bezier(.2,.7,.2,1), box-shadow .55s ease, border-color .55s ease;
+    overflow:hidden;
+  }
+  /* Comparison ledger */
+  .cmp{border:1px solid var(--ink-10);border-radius:20px;overflow:hidden;background:var(--bg)}
+  .cmp-head{display:grid;grid-template-columns:80px 1fr 1fr;border-bottom:1px solid var(--ink-10)}
+  .cmp-head > div{padding:18px 24px;font-family:var(--mono);font-size:11px;letter-spacing:.24em;text-transform:uppercase}
+  .cmp-head .lbl-n{color:var(--ink-50)}
+  .cmp-head .lbl-them{color:var(--ink-50);border-left:1px solid var(--ink-10)}
+  .cmp-head .lbl-us{color:var(--cardamom);border-left:1px solid var(--ink-10);background:rgba(196,150,58,.04)}
+  .cmp-head .lbl-us .dot{width:6px;height:6px;border-radius:50%;background:var(--gold);display:inline-block;margin-right:8px;vertical-align:middle;box-shadow:0 0 8px rgba(196,150,58,.6)}
+  .cmp-row{display:grid;grid-template-columns:80px 1fr 1fr;border-bottom:1px solid var(--ink-10);transition:background .4s ease}
+  .cmp-row:last-child{border-bottom:0}
+  .cmp-row:hover{background:rgba(14,11,7,.015)}
+  .cmp-row > div{padding:32px 24px}
+  .cmp-num{font-family:var(--mono);font-size:11px;letter-spacing:.24em;color:var(--cardamom);align-self:start}
+  .cmp-them{border-left:1px solid var(--ink-10)}
+  .cmp-them .topic{font-family:var(--mono);font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-50);margin-bottom:10px}
+  .cmp-them h4{font-family:var(--display);font-weight:500;font-size:clamp(18px,1.7vw,22px);line-height:1.25;letter-spacing:-0.02em;color:var(--ink-50);text-decoration:line-through;text-decoration-color:rgba(14,11,7,.25);text-decoration-thickness:1px;margin-bottom:10px}
+  .cmp-them p{font-size:14px;line-height:1.6;color:var(--ink-50);max-width:48ch}
+  .cmp-us{border-left:1px solid var(--ink-10);background:linear-gradient(180deg, rgba(196,150,58,.05) 0%, rgba(196,150,58,0) 100%);position:relative}
+  .cmp-us::before{content:"";position:absolute;left:0;top:0;bottom:0;width:2px;background:linear-gradient(180deg, var(--gold) 0%, rgba(196,150,58,0) 100%)}
+  .cmp-us .topic{font-family:var(--mono);font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--cardamom);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+  .cmp-us .topic .mark{width:18px;height:18px;border-radius:50%;background:radial-gradient(circle at 30% 30%, #c4963a 0%, #8a6a2a 50%, #0E0B07 100%);display:inline-flex;align-items:center;justify-content:center;color:#fff;box-shadow:0 0 0 1px rgba(196,150,58,.4), 0 0 8px rgba(196,150,58,.35)}
+  .cmp-us h4{font-family:var(--display);font-weight:500;font-size:clamp(20px,1.9vw,26px);line-height:1.2;letter-spacing:-0.02em;color:var(--ink);margin-bottom:10px}
+  .cmp-us h4 em{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--cardamom)}
+  .cmp-us p{font-size:14.5px;line-height:1.6;color:var(--ink);max-width:50ch;text-wrap:pretty}
+  @media (max-width:760px){
+    .cmp-head, .cmp-row{grid-template-columns:1fr}
+    .cmp-head .lbl-n{display:none}
+    .cmp-head .lbl-them, .cmp-head .lbl-us{border-left:0;border-bottom:1px solid var(--ink-10)}
+    .cmp-row > div{padding:22px}
+    .cmp-them, .cmp-us{border-left:0;border-top:1px solid var(--ink-10)}
+    .cmp-num{padding-bottom:0}
+  }
+  /* Manifesto strip — gap statement */
+  .gap-strip{margin-top:32px;background:var(--ink);color:var(--bg);border-radius:20px;overflow:hidden;position:relative;padding:64px 48px;display:grid;grid-template-columns:1.2fr 1fr;gap:48px;align-items:center}
+  .gap-strip::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(60% 80% at 90% 20%, rgba(196,150,58,.30) 0%, rgba(196,150,58,0) 60%), radial-gradient(40% 60% at 10% 100%, rgba(196,150,58,.12) 0%, rgba(196,150,58,0) 60%)}
+  .gap-strip .stamp{position:relative;font-family:var(--mono);font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:20px;display:flex;align-items:center;gap:10px}
+  .gap-strip .stamp .ln{flex:0 0 40px;height:1px;background:var(--gold);opacity:.6}
+  .gap-strip h3{position:relative;font-family:var(--display);font-weight:400;font-size:clamp(28px,3.6vw,46px);line-height:1.08;letter-spacing:-0.03em;color:var(--bg);max-width:24ch}
+  .gap-strip h3 em{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--gold)}
+  .gap-strip .right{position:relative;display:flex;flex-direction:column;gap:18px}
+  .gap-strip .body{font-size:15px;line-height:1.65;color:rgba(253,250,244,.78);max-width:48ch;text-wrap:pretty}
+  .gap-strip .that{font-family:var(--serif);font-style:italic;font-size:clamp(22px,2.4vw,30px);color:var(--gold);letter-spacing:-0.01em}
+  .gap-strip .seal{display:inline-flex;align-items:center;gap:14px;padding:10px 18px 10px 10px;border-radius:999px;background:rgba(253,250,244,.06);border:1px solid rgba(253,250,244,.14);font-family:var(--display);font-weight:500;font-size:14.5px;color:var(--bg);align-self:flex-start}
+  .gap-strip .seal .av{width:30px;height:30px;border-radius:50%;background:radial-gradient(circle at 30% 30%, #c4963a 0%, #8a6a2a 45%, #0E0B07 100%);display:inline-flex;align-items:center;justify-content:center;color:#fff;font-family:var(--serif);font-style:italic;font-size:13px;font-weight:500;box-shadow:0 0 0 1px rgba(196,150,58,.45), 0 0 12px rgba(196,150,58,.4)}
+  @media (max-width:760px){ .gap-strip{padding:44px 28px;grid-template-columns:1fr;gap:28px} }
+
+
+  .promises{padding:96px 24px;border-top:1px solid var(--ink-10);max-width:80rem;margin:0 auto}
+  .p-head{display:grid;grid-template-columns:1fr;gap:24px;margin-bottom:48px;align-items:end}
+  @media (min-width:880px){ .p-head{grid-template-columns:1fr 1fr} }
+  .p-head .meta{font-family:var(--mono);font-size:11px;letter-spacing:.22em;color:var(--ink-50);text-transform:uppercase;justify-self:end;text-align:right;max-width:32ch;line-height:1.7}
+  @media (max-width:880px){ .p-head .meta{justify-self:start;text-align:left} }
+  .p-list{display:flex;flex-direction:column;border-top:1px solid var(--ink-10)}
+  .p-row{display:grid;grid-template-columns:80px 1fr 1fr;gap:32px;padding:30px 0;border-bottom:1px solid var(--ink-10);align-items:start;transition:background .4s ease, padding-left .4s ease}
+  .p-row:hover{background:linear-gradient(90deg, rgba(196,150,58,.06), rgba(196,150,58,0) 70%);padding-left:8px}
+  @media (max-width:760px){ .p-row{grid-template-columns:1fr;gap:8px} }
+  .p-row .num{font-family:var(--mono);font-size:12px;letter-spacing:.22em;color:var(--cardamom)}
+  .p-row .ttl{font-family:var(--display);font-weight:500;font-size:clamp(22px,2vw,28px);line-height:1.15;letter-spacing:-0.025em}
+  .p-row .ttl em{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--cardamom)}
+  .p-row .bd{font-size:15px;color:var(--ink-70);line-height:1.6;max-width:46ch;text-wrap:pretty}
+
+  /* ---------- Fabric Tech ---------- */
+  .fab{padding:120px 0 96px;border-top:1px solid var(--ink-10);overflow:hidden;position:relative}
+  .fab-head{max-width:80rem;margin:0 auto 64px;padding:0 24px;display:grid;grid-template-columns:1fr;gap:24px;align-items:end}
+  @media (min-width:880px){ .fab-head{grid-template-columns:1.4fr 1fr} }
+  .fab-head .meta{font-family:var(--mono);font-size:11px;letter-spacing:.22em;color:var(--ink-50);text-transform:uppercase;justify-self:end;text-align:right;max-width:34ch;line-height:1.7}
+  @media (max-width:880px){ .fab-head .meta{justify-self:start;text-align:left} }
+  .fab-head .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.24em;color:var(--cardamom);text-transform:uppercase;margin-bottom:18px}
+
+  .fab-track-wrap{position:relative;mask-image:linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);-webkit-mask-image:linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent)}
+  .fab-track{display:flex;gap:24px;width:max-content;animation:fabScroll 60s linear infinite;will-change:transform}
+  .fab-track-wrap:hover .fab-track{animation-play-state:paused}
+  @keyframes fabScroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  .fab-progress{max-width:80rem;margin:36px auto 0;padding:0 24px;display:flex;align-items:center;gap:16px}
+  .fab-progress .bar{flex:1;height:1px;background:var(--ink-10);position:relative;overflow:hidden}
+  .fab-progress .bar > span{position:absolute;left:0;top:0;height:100%;background:var(--cardamom);transform-origin:left;transform:scaleX(0);transition:transform .25s ease}
+  .fab-progress .lbl{font-family:var(--mono);font-size:10.5px;letter-spacing:.24em;color:var(--ink-50);text-transform:uppercase}
+
+  .fab-card{flex:0 0 auto;width:380px;min-height:280px;border:1px solid var(--ink-10);border-radius:16px;padding:32px;background:var(--bg);display:flex;flex-direction:column;justify-content:space-between;gap:24px;position:relative;overflow:hidden;transition:border-color .4s ease, transform .4s ease, box-shadow .4s ease;isolation:isolate;color:var(--bg)}
+  .fab-card .bg{position:absolute;inset:0;background-size:cover;background-position:center;z-index:-2;transition:transform 1.2s ease}
+  .fab-card .scrim{position:absolute;inset:0;background:linear-gradient(180deg, rgba(14,11,7,.10) 0%, rgba(14,11,7,.45) 55%, rgba(14,11,7,.78) 100%);z-index:-1}
+  .fab-card:hover{border-color:rgba(196,150,58,.55);transform:translateY(-4px);box-shadow:0 20px 60px -30px rgba(14,11,7,.4)}
+  .fab-card:hover .bg{transform:scale(1.06)}
+  .fab-card .num{font-family:var(--mono);font-size:11px;letter-spacing:.24em;color:var(--gold);text-shadow:0 1px 4px rgba(0,0,0,.3)}
+  .fab-card .name{font-family:var(--display);font-weight:500;font-size:32px;line-height:1.05;letter-spacing:-.025em;color:var(--bg);text-shadow:0 2px 12px rgba(0,0,0,.4)}
+  .fab-card .name .tm{font-family:var(--mono);font-size:13px;vertical-align:super;color:var(--gold);font-weight:400;margin-left:2px;letter-spacing:0;text-shadow:none}
+  .fab-card .desc{font-family:var(--serif);font-style:italic;font-weight:400;font-size:18px;line-height:1.4;color:rgba(253,250,244,.92);text-wrap:pretty;text-shadow:0 1px 8px rgba(0,0,0,.4)}
+  .fab-card .desc em{color:var(--gold)}
+  .fab-card .glyph{display:none}
+  .fab-card .tag{font-family:var(--mono);font-size:10px;letter-spacing:.24em;color:rgba(253,250,244,.75);text-transform:uppercase;border-top:1px solid rgba(253,250,244,.18);padding-top:14px}
+
+
+  /* ---------- CTA ---------- */
+  .cta{margin:32px 24px;border-radius:24px;background:var(--ink);color:var(--bg);padding:80px 32px;text-align:center;position:relative;overflow:hidden}
+  .cta::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(50% 70% at 50% 0%, rgba(196,150,58,.18), transparent 70%)}
+  .cta h2{font-family:var(--display);font-weight:400;font-size:clamp(40px,6vw,80px);line-height:1.04;letter-spacing:-0.035em;margin-bottom:16px;color:var(--bg)}
+  .cta h2 em{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--gold)}
+  .cta p{font-size:16px;color:rgba(253,250,244,.7);max-width:48ch;margin:0 auto 32px;line-height:1.55}
+  .capture{display:flex;gap:8px;max-width:480px;margin:0 auto;background:rgba(253,250,244,.08);border:1px solid rgba(253,250,244,.15);border-radius:999px;padding:6px 6px 6px 24px;align-items:center}
+  .capture input{flex:1;background:transparent;border:0;outline:0;color:var(--bg);font-size:15px;padding:10px 0}
+  .capture input::placeholder{color:rgba(253,250,244,.45)}
+  .capture button{background:var(--bg);color:var(--ink);border:0;border-radius:999px;padding:11px 22px;font-size:14px;font-weight:500}
+  .capture-msg{font-family:var(--serif);font-style:italic;color:var(--gold);font-size:18px;margin-top:18px;opacity:0;transform:translateY(6px);transition:opacity .5s ease, transform .5s ease}
+  .capture-msg.in{opacity:1;transform:translateY(0)}
+  .cta-perks{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:0 auto 28px;max-width:640px}
+  .cta-perks .chip{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:8px 14px 8px 8px;border-radius:999px;
+    background:rgba(253,250,244,.06);border:1px solid rgba(253,250,244,.16);
+    font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:rgba(253,250,244,.85);
+  }
+  .cta-perks .chip strong{font-family:var(--display);font-weight:600;font-size:12px;color:var(--gold);letter-spacing:.04em;text-transform:none}
+  .cta-perks .chip .o{
+    width:22px;height:22px;border-radius:50%;
+    background:radial-gradient(circle at 30% 30%, #c4963a 0%, #8a6a2a 45%, #0E0B07 100%);
+    box-shadow:0 0 0 1px rgba(196,150,58,.35), 0 0 10px rgba(196,150,58,.30);
+    display:inline-flex;align-items:center;justify-content:center;color:#fff;
+  }
+  .cta-perks .chip .o svg{width:11px;height:11px;filter:drop-shadow(0 0 2px rgba(255,236,200,.55))}
+  .cta-fine{font-family:var(--mono);font-size:11px;letter-spacing:.20em;text-transform:uppercase;color:rgba(253,250,244,.5);margin-top:14px}
+
+  /* ---------- Welcome modal ---------- */
+  @keyframes mdl-overlay{from{opacity:0}to{opacity:1}}
+  @keyframes mdl-rise{from{opacity:0;transform:translateY(20px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+  @keyframes mdl-glow{0%,100%{transform:translate(-50%,-50%) scale(1);opacity:.55}50%{transform:translate(-50%,-50%) scale(1.15);opacity:.85}}
+  @keyframes mdl-confetti{from{transform:translate(var(--tx,0),120vh) rotate(0deg);opacity:0}10%{opacity:1}to{transform:translate(var(--tx,0),-20vh) rotate(720deg);opacity:0}}
+  @keyframes mdl-script{from{stroke-dashoffset:1200;opacity:0}25%{opacity:1}to{stroke-dashoffset:0;opacity:1}}
+  @keyframes mdl-line{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+
+  .mdl-overlay{
+    position:fixed;inset:0;z-index:1000;
+    background:rgba(14,11,7,.78);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+    display:flex;align-items:center;justify-content:center;padding:24px;
+    animation:mdl-overlay .35s ease both;
+    overflow:hidden;
+  }
+  .mdl-card{
+    position:relative;width:min(620px,100%);
+    background:#0E0B07;color:var(--bg);
+    border:1px solid rgba(196,150,58,.25);
+    border-radius:24px;overflow:hidden;
+    padding:56px 44px 44px;
+    text-align:center;
+    animation:mdl-rise .55s cubic-bezier(.2,.8,.2,1) both;
+    box-shadow:0 40px 90px -30px rgba(0,0,0,.6), 0 0 0 1px rgba(196,150,58,.15) inset;
+  }
+  .mdl-card::before{
+    content:"";position:absolute;left:50%;top:-180px;width:600px;height:600px;
+    background:radial-gradient(circle, rgba(196,150,58,.45) 0%, rgba(196,150,58,0) 60%);
+    transform:translate(-50%,-50%);pointer-events:none;
+    animation:mdl-glow 4s ease-in-out infinite;
+  }
+  .mdl-card::after{
+    content:"";position:absolute;left:0;right:0;bottom:0;height:1px;
+    background:linear-gradient(90deg, transparent, rgba(196,150,58,.6), transparent);
+  }
+  .mdl-close{
+    position:absolute;top:16px;right:16px;
+    width:32px;height:32px;border-radius:50%;
+    background:rgba(253,250,244,.06);border:1px solid rgba(253,250,244,.12);
+    color:rgba(253,250,244,.7);
+    display:inline-flex;align-items:center;justify-content:center;cursor:pointer;
+    transition:background .25s ease, color .25s ease, transform .25s ease;
+  }
+  .mdl-close:hover{background:rgba(253,250,244,.12);color:var(--bg);transform:rotate(90deg)}
+
+  .mdl-seal{
+    position:relative;width:84px;height:84px;border-radius:50%;
+    margin:0 auto 28px;
+    background:radial-gradient(circle at 30% 30%, #d9a847 0%, #a37a2c 45%, #5a4318 80%, #1a1308 100%);
+    box-shadow:0 0 0 1px rgba(196,150,58,.4), 0 0 24px rgba(196,150,58,.45), 0 0 60px rgba(196,150,58,.25);
+    display:flex;align-items:center;justify-content:center;
+  }
+  .mdl-seal svg{width:42px;height:42px;color:#FDFAF4;filter:drop-shadow(0 0 4px rgba(255,236,200,.7))}
+
+  .mdl-eye{position:relative;font-family:var(--mono);font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;display:inline-flex;align-items:center;gap:10px}
+  .mdl-eye .ln{flex:0 0 28px;height:1px;background:var(--gold);opacity:.5;transform-origin:left;animation:mdl-line .8s .3s ease-out both}
+  .mdl-eye .ln.r{transform-origin:right}
+
+  .mdl-card h3{
+    position:relative;
+    font-family:var(--display);font-weight:400;font-size:clamp(28px,4vw,40px);
+    line-height:1.08;letter-spacing:-0.03em;color:var(--bg);
+    margin-bottom:18px;text-wrap:balance;
+  }
+  .mdl-card h3 em{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--gold)}
+
+  .mdl-card .lede{
+    position:relative;font-size:15.5px;line-height:1.65;color:rgba(253,250,244,.78);
+    max-width:42ch;margin:0 auto 28px;text-wrap:pretty;
+  }
+  .mdl-card .lede em{font-family:var(--serif);font-style:italic;color:var(--gold);font-size:1.05em}
+
+  .mdl-quote{
+    position:relative;display:inline-block;
+    font-family:var(--serif);font-style:italic;font-weight:400;
+    font-size:clamp(18px,2.2vw,22px);color:var(--gold);
+    padding:18px 0;margin:0 auto 28px;
+    max-width:30ch;line-height:1.4;text-wrap:balance;
+  }
+  .mdl-quote::before, .mdl-quote::after{content:"";position:absolute;left:50%;width:32px;height:1px;background:var(--gold);opacity:.4;transform:translateX(-50%)}
+  .mdl-quote::before{top:0}.mdl-quote::after{bottom:0}
+
+  .mdl-meta{
+    position:relative;display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;
+    font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:rgba(253,250,244,.6);
+    margin-bottom:24px;
+  }
+  .mdl-meta .pos{color:var(--gold);font-weight:500}
+  .mdl-meta .sep{width:4px;height:4px;border-radius:50%;background:rgba(253,250,244,.25)}
+
+  .mdl-cta{
+    position:relative;display:inline-flex;align-items:center;gap:10px;
+    padding:14px 28px;border-radius:999px;
+    background:var(--gold);color:#0E0B07;
+    font-family:var(--display);font-weight:500;font-size:14.5px;cursor:pointer;border:0;
+    transition:transform .3s ease, box-shadow .3s ease;
+    box-shadow:0 0 0 1px rgba(196,150,58,.4), 0 8px 24px -6px rgba(196,150,58,.6);
+  }
+  .mdl-cta:hover{transform:translateY(-2px);box-shadow:0 0 0 1px rgba(196,150,58,.5), 0 14px 32px -6px rgba(196,150,58,.75)}
+  .mdl-cta svg{width:14px;height:14px}
+
+  .mdl-share{margin-top:14px;font-family:var(--mono);font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:rgba(253,250,244,.4)}
+
+  /* confetti */
+  .mdl-confetti{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+  .mdl-confetti i{
+    position:absolute;left:var(--lx,50%);bottom:0;
+    width:8px;height:14px;background:var(--bg);
+    animation:mdl-confetti var(--d,2.6s) var(--dl,0s) ease-out forwards;
+    transform-origin:center;
+  }
+  .mdl-confetti i.gold{background:var(--gold)}
+  .mdl-confetti i.cardamom{background:var(--cardamom)}
+  .mdl-confetti i.thin{width:2px;height:18px}
+
+  @media (max-width:560px){
+    .mdl-card{padding:44px 24px 32px}
+  }
+
+  /* ---------- Footer ---------- */
+  footer.bot{padding:64px 24px 40px;border-top:1px solid var(--ink-10)}
+  .foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:36px;max-width:80rem;margin:0 auto 56px}
+  @media (max-width:880px){ .foot-grid{grid-template-columns:1fr 1fr} }
+  .foot-grid h4{font-family:var(--mono);font-size:10.5px;letter-spacing:.24em;color:var(--cardamom);text-transform:uppercase;margin-bottom:16px;font-weight:500}
+  .foot-grid li{font-size:14px;color:var(--ink-70);line-height:1.9;list-style:none}
+  .foot-grid li a{display:inline-flex;align-items:center;gap:10px;color:inherit;text-decoration:none;transition:color .25s ease}
+  .foot-grid li a svg{width:15px;height:15px;color:var(--ink-50);transition:color .25s ease}
+  .foot-grid li a:hover svg{color:var(--cardamom)}
+  .foot-grid a:hover{color:var(--ink)}
+  .foot-mark{font-family:var(--display);font-size:24px;font-weight:600;letter-spacing:-0.02em;margin-bottom:12px}
+  .foot-base{display:flex;justify-content:space-between;gap:18px;font-family:var(--mono);font-size:10.5px;letter-spacing:.22em;color:var(--ink-50);text-transform:uppercase;flex-wrap:wrap;padding:24px 24px 0;border-top:1px solid var(--ink-10);max-width:80rem;margin:0 auto}
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:.01ms !important;transition-duration:.01ms !important}
+  }
+</style>
+</head>
+<body>
+  <div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<!-- ── EmailJS (browser SDK) ───────────────────────────────────────────── -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+<!-- ── Firebase: Firestore ────────────────────────────────────────────── -->
+<script type="module">
+  import { initializeApp }                          from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+  import { getAnalytics }                           from "https://www.gstatic.com/firebasejs/12.12.1/firebase-analytics.js";
+  import { getFirestore, collection, addDoc, serverTimestamp }
+                                                    from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey:            "AIzaSyC9buXtvi2tWTaaF63KyEgDWBjC80LipIk",
+    authDomain:        "rivlet---coming-soon-page.firebaseapp.com",
+    projectId:         "rivlet---coming-soon-page",
+    storageBucket:     "rivlet---coming-soon-page.firebasestorage.app",
+    messagingSenderId: "237230025475",
+    appId:             "1:237230025475:web:813ad5d1caa90d20551736",
+    measurementId:     "G-4HT3N1W7XV"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  getAnalytics(app);
+  const db = getFirestore(app);
+
+  /* Exposed to the Babel/React component below */
+  window.__rivletSaveSubscriber = (email) =>
+    addDoc(collection(db, "subscribers"), {
+      email,
+      subscribedAt: serverTimestamp(),
+      source: "stellar-coming-soon"
+    });
+</script>
+
+<!-- ── EmailJS config ─────────────────────────────────────────────────── -->
+<!--
+  HOW TO SET UP (takes ~5 min):
+  1. Create a free account at https://www.emailjs.com
+  2. Add an Email Service (Gmail / Outlook / etc.)  → copy its Service ID
+  3. Create TEMPLATE 1 — "rivlet_notify" (business alert)
+       To:      earlyaccess@email.com
+       Subject: New Rivlet early-access signup
+       Body:    A new subscriber just joined: {{subscriber_email}}
+                Signed up at: {{subscribed_at}} IST
+  4. Create TEMPLATE 2 — "rivlet_welcome" (customer welcome)
+       To:      {{to_email}}
+       Subject: Welcome to Rivlet — You're on the list.
+       Body:    Hi {{to_name}}, you're on the list …  (write your welcome copy)
+  5. Account → API Keys → copy your Public Key
+  Then fill in the four constants below.
+-->
+<script>
+  const EMAILJS_PUBLIC_KEY   = "YOUR_PUBLIC_KEY";        // ← Account > API Keys
+  const EMAILJS_SERVICE_ID   = "YOUR_SERVICE_ID";        // ← Email Service ID
+  const EMAILJS_TMPL_NOTIFY  = "YOUR_NOTIFY_TEMPLATE";   // ← Template ID for business alert
+  const EMAILJS_TMPL_WELCOME = "YOUR_WELCOME_TEMPLATE";  // ← Template ID for customer welcome
+
+  window.addEventListener("load", () => {
+    if (typeof emailjs !== "undefined") {
+      emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+    }
+  });
+
+  window.__rivletSendEmails = async (email) => {
+    const name = email.split("@")[0];
+    const now  = new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" });
+
+    await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TMPL_NOTIFY, {
+      subscriber_email: email,
+      subscribed_at:    now,
+    });
+
+    await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TMPL_WELCOME, {
+      to_email: email,
+      to_name:  name,
+    });
+  };
+</script>
+
+<script type="text/babel">
+
+
+const { useState, useEffect, useRef } = React;
+
+// --- Icons (lucide-style) ---
+const I = ({ d, size = 16, sw = 1.7, fill = "none" }) =>
+<svg viewBox="0 0 24 24" width={size} height={size} fill={fill} stroke="currentColor" strokeWidth={sw} strokeLinecap="round" strokeLinejoin="round">{d}</svg>;
+
+const Star = (p) => <I {...p} fill="currentColor" d={<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />} />;
+const ChevronDown = (p) => <I {...p} d={<polyline points="6 9 12 15 18 9" />} />;
+const ArrowRight = (p) => <I {...p} d={<><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></>} />;
+const Check = (p) => <I {...p} d={<polyline points="20 6 9 17 4 12" />} />;
+const Circle = (p) => <I {...p} d={<circle cx="12" cy="12" r="9" />} />;
+const Activity = (p) => <I {...p} d={<polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />} />;
+const Wind = (p) => <I {...p} d={<><path d="M9.59 4.59A2 2 0 1 1 11 8H2" /><path d="M12.59 19.41A2 2 0 1 0 14 16H2" /><path d="M17.73 7.73A2.5 2.5 0 1 1 19.5 12H2" /></>} />;
+const Layers = (p) => <I {...p} d={<><polygon points="12 2 2 7 12 12 22 7 12 2" /><polyline points="2 17 12 22 22 17" /><polyline points="2 12 12 17 22 12" /></>} />;
+const Leaf = (p) => <I {...p} d={<><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19.2 2.5c1 1.5 0 7-2.7 9.7-2.6 2.6-7.5 2.6-7.5 2.6" /><path d="M2 21c0-3 1.85-5.36 5.08-6" /></>} />;
+const Globe = (p) => <I {...p} d={<><circle cx="12" cy="12" r="10" /><line x1="2" y1="12" x2="22" y2="12" /><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" /></>} />;
+const Anchor = (p) => <I {...p} d={<><circle cx="12" cy="5" r="3" /><line x1="12" y1="22" x2="12" y2="8" /><path d="M5 12H2a10 10 0 0 0 20 0h-3" /></>} />;
+const Spark = (p) => <I {...p} d={<><path d="M12 2v6" /><path d="M12 16v6" /><path d="M2 12h6" /><path d="M16 12h6" /><path d="M5 5l3 3" /><path d="M16 16l3 3" /><path d="M5 19l3-3" /><path d="M16 8l3-3" /></>} />;
+
+// --- Data ---
+const TABS = [
+{ key: "active", label: "Sports", icon: Activity,
+  title: "For the work — run, lift, stretch.",
+  tagline: "Built for the work — the run, the lift, the long stretch.",
+  frameTitle: <>Run with the <em>river.</em></>,
+  frameBody: "Lightweight Madurai cotton woven tight enough to wick, loose enough to breathe. The first mile is the test — the rest, a habit.",
+  pct: 25, accent: "#7A5C3A", stamp: "Plate I · 05:34 IST", image: "assets/fabric-1.jpg",
+  items: [
+  { label: "Performance knit cotton", meta: "GOTS · 250gsm", done: true },
+  { label: "4-way stretch waistband", meta: "Bonded seam", done: true },
+  { label: "Sweat-wick laser perforation", meta: "Per panel", done: false },
+  { label: "Reflective trim, dawn runs", meta: "Optional", done: false }]
+},
+{ key: "sport", label: "Performance", icon: Wind,
+  title: "Built for sport-specific demands.",
+  tagline: "Performance fabrics for sport-specific demands.",
+  frameTitle: <>Built to <em>last the round.</em></>,
+  frameBody: "Salt-tested seams, four-way stretch, recovery on cycle fifty. We don't write specs we can't keep on the second wash.",
+  pct: 67, accent: "#C4963A", stamp: "Plate II · Madurai · Cut floor", image: "assets/fabric-6.jpg",
+  items: [
+  { label: "Recovery-blend mesh", meta: "Linen White", done: true },
+  { label: "Anti-chafe gusset", meta: "Flatlock", done: true },
+  { label: "Reinforced compression zones", meta: "Quad · Calf", done: true },
+  { label: "Salt-tested seam tape", meta: "50 wash cycles", done: false }]
+},
+{ key: "athleisure", label: "Athleisure", icon: Layers,
+  title: "Crossover — gym, street, dinner.",
+  tagline: "The crossover — gym to street to dinner without a costume change.",
+  frameTitle: <>Move like water, <em>feel like air.</em></>,
+  frameBody: "Soft hands. Quiet seams. Fabrics that breathe and recover. A garment should disappear on the body and only be felt as confidence — that is the whole brief, written once and held forever.",
+  pct: 88, accent: "#4A5C6A", stamp: "Plate III · Studio fitting", image: "assets/fabric-3.jpg",
+  items: [
+  { label: "Tencel × cotton hand-feel", meta: "Sand · Navy · Ink", done: true },
+  { label: "Hidden technical pockets", meta: "3 placements", done: true },
+  { label: "Tailored, gym-tolerant cut", meta: "Pattern v2.4", done: true },
+  { label: "Quiet hardware, no logos", meta: "Brass · matte", done: true }]
+},
+{ key: "easy", label: "Easy wear", icon: Leaf,
+  title: "For the quiet hours. Travel, rest.",
+  tagline: "For the quiet hours. Travel, rest, walk, read.",
+  frameTitle: <>For the <em>quiet hours.</em></>,
+  frameBody: "Garment-washed Madurai cotton, lived-in cuts, travel-folded dimensions. Carry-on optimised. Built to wear in, never out.",
+  pct: 100, accent: "#3e6b34", stamp: "Plate IV · Vaigai · 05:34", image: "assets/fabric-5.jpg",
+  items: [
+  { label: "Garment-washed Madurai cotton", meta: "Hand-finished", done: true },
+  { label: "Loose, lived-in cuts", meta: "Pre-broken in", done: true },
+  { label: "Travel-folded dimensions", meta: "Carry-on optimised", done: true },
+  { label: "Wears in, never out", meta: "Built for 5 yrs+", done: true }]
+}];
+
+
+// --- Components ---
+function Brand() {
+  return (
+    <div className="brand">
+      <div className="brand-mark" style={{ backgroundSize: "contain" }}></div>
+      <div className="brand-text">Rivlet</div>
+    </div>);
+
+}
+
+function Nav() {
+  return (
+    <nav className="top anim" style={{ animationDelay: ".1s" }}>
+      <Brand />
+      <div className="nav-links">
+        <a href="#collections">Collections</a>
+        <a href="#vision">Vision <ChevronDown size={13} sw={1.8} /></a>
+        <a href="#different">How we differ</a>
+        <a href="#promises">Standards <ChevronDown size={13} sw={1.8} /></a>
+        <a href="#journal">Journal</a>
+      </div>
+      <div className="nav-right">
+        <a href="#join" className="pill">Get early access</a>
+      </div>
+    </nav>);
+
+}
+
+function Hero() {
+  const [tab, setTab] = useState("active");
+  useEffect(() => {
+    const id = setInterval(() => {
+      setTab((t) => {
+        const i = TABS.findIndex((x) => x.key === t);
+        return TABS[(i + 1) % TABS.length].key;
+      });
+    }, 4500);
+    return () => clearInterval(id);
+  }, []);
+  const active = TABS.find((t) => t.key === tab);
+  const Icon = active.icon;
+
+  return (
+    <section className="hero">
+      <div className="badge anim" style={{ animationDelay: ".2s" }}>
+        <span className="sq"><Star size={12} /></span>
+        <span>4.9 from early-access readers · Madurai studio</span>
+      </div>
+
+      <h1 className="hero-h anim" style={{ animationDelay: ".3s" }}>
+        <span className="l1">Move like you mean it.</span>
+        <span className="l2">A wardrobe that flows with you.</span>
+      </h1>
+
+      <p className="hero-sub anim" style={{ animationDelay: ".4s" }}>
+        Premium activewear, sportswear, athleisure and easy wear — Indian-crafted to global standards,
+        built without compromise, for the person who lives their whole day in motion.
+      </p>
+
+      <button className="hero-cta anim" style={{ animationDelay: ".5s" }}
+      onClick={() => document.getElementById("join")?.scrollIntoView({ behavior: "smooth" })}>
+        Join the early list
+        <span className="arr"><ArrowRight size={16} /></span>
+      </button>
+
+      <div className="tabs-wrap anim" style={{ animationDelay: ".6s" }}>
+        <div className="tabs" role="tablist">
+          {TABS.map((t, i) => {
+            const Ic = t.icon;
+            return (
+              <React.Fragment key={t.key}>
+                <button className={"tab" + (tab === t.key ? " active" : "")} onClick={() => setTab(t.key)} role="tab" aria-selected={tab === t.key}>
+                  <span className="ico"><Ic size={15} /></span>
+                  <span>{t.label}</span>
+                </button>
+                {i < TABS.length - 1 && <span className={"tab-divider" + (tab === t.key || tab === TABS[i + 1].key ? " hide" : "")}></span>}
+              </React.Fragment>);
+
+          })}
+        </div>
+      </div>
+
+      <div className="anim" style={{ animationDelay: ".7s" }}>
+        <div className="ed-show" id="collections">
+          <div className="ed-left">
+            <div className="eyebrow">Rivlet in practice</div>
+            <h3 className="ed-title">A wardrobe for <em>motion.</em></h3>
+            <p className="ed-sub">Four ways the same closet shows up — for athletes, for the everyday, for the in-between hours that make up most of a life.</p>
+            <div className="ed-list">
+              {TABS.map((t, i) => {
+                const isActive = t.key === tab;
+                return (
+                  <div
+                    key={t.key}
+                    className={"ed-row" + (isActive ? " is-active" : "")}
+                    onClick={() => setTab(t.key)}
+                    role="button"
+                    aria-pressed={isActive}>
+                    
+                    <div className="ed-num">{String(i + 1).padStart(2, "0")}</div>
+                    <div>
+                      <div className="ed-rt">{t.label}</div>
+                      <div className="ed-rb">{t.tagline}</div>
+                    </div>
+                  </div>);
+
+              })}
+            </div>
+          </div>
+
+          <div className="ed-frame" key={tab}>
+            <div className="bg-img" style={{ backgroundImage: `url("${active.image}")` }}></div>
+            <div className="tint"></div>
+            <div className="corner tr">{active.stamp}</div>
+            <div className="ed-inner">
+              <div className="ed-eyebrow">Featured · {active.label}</div>
+              <div className="ed-h">{active.frameTitle}</div>
+              <div className="ed-body">{active.frameBody}</div>
+              <button className="ed-cta" onClick={() => document.getElementById("vision")?.scrollIntoView({ behavior: "smooth" })}>
+                <span className="arr"><ArrowRight size={14} /></span>
+                <span>Know more</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>);
+
+}
+
+function Vision() {
+  const cards = [
+  { n: "01", t: <>Every ocean <em>begins here.</em></>, p: "Every ocean was first fed by a rivlet. Small water, taken seriously, becomes the sea — we are starting at the source." },
+  { n: "02", t: <>Rooted in the <em>land.</em></>, p: "Indian textile is older than most countries. We carry that legacy on the label — handlooms, mill cotton, contemporary performance knits." },
+  { n: "03", t: <>Built for your <em>whole day.</em></>, p: "One wardrobe, from your 5:30am run to your 9pm dinner. Train in it. Travel in it. Live in it. No costume changes." }];
+
+  return (
+    <section className="block vision-section" id="vision">
+      <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 32, alignItems: "end", marginBottom: 8 }}>
+        <h2 className="disp">A small water, <em>moving with intent.</em></h2>
+        <p className="lead" style={{ maxWidth: "60ch" }}>The brief, written once: a wardrobe that stays close to the source, and asks for nothing more than to disappear on the body and be felt as confidence.</p>
+      </div>
+      <div className="vision-grid">
+        {cards.map((c, i) =>
+        <div className="v-card" key={i}>
+            <div className="v-num"><span>— {c.n}</span><span className="dash"></span><span>VISION</span></div>
+            <h3>{c.t}</h3>
+            <p>{c.p}</p>
+          </div>
+        )}
+      </div>
+    </section>);
+
+}
+
+function Difference() {
+  const rows = [
+  {
+    n: "01",
+    topic: "On who it's for",
+    themLabel: "Global premium brands",
+    themLine: "Designed for Western bodies, Western climates, Western price points.",
+    usLabel: "Rivlet",
+    usHead: <>Designed for <em>every body</em>, every climate, every person.</>,
+    usLine: "At a price point that respects you. Premium fabric. Indian ownership. Global standards. No apology for where we come from."
+  },
+  {
+    n: "02",
+    topic: "On accountability",
+    themLabel: "Every “made in India” label",
+    themLine: "They say it. They print it on a tag. The supply chain is somebody else's problem.",
+    usLabel: "Rivlet",
+    usHead: <>We don't just say it — <em>we own it.</em></>,
+    usLine: "At a price point that respects you. Premium fabric. Indian ownership. Global standards. No apology for where we come from."
+  }];
+
+  return (
+    <section className="diff" id="different">
+      <div className="head">
+        <div>
+          <div className="eyebrow">How we're different</div>
+          <h2>Premium fabric. Indian ownership. <em>Global standards.</em></h2>
+        </div>
+        <p className="lede">No apology for where we come from. Read this once, it explains the rest of the wardrobe.</p>
+      </div>
+
+      <div className="cmp">
+        <div className="cmp-head">
+          <div className="lbl-n">No.</div>
+          <div className="lbl-them">The category</div>
+          <div className="lbl-us"><span className="dot"></span>Rivlet</div>
+        </div>
+        {rows.map((r) =>
+        <div className="cmp-row" key={r.n}>
+            <div className="cmp-num">— {r.n}</div>
+            <div className="cmp-them">
+              <div className="topic">{r.topic} · {r.themLabel}</div>
+              <h4>{r.themLine}</h4>
+            </div>
+            <div className="cmp-us">
+              <div className="topic"><span className="mark"><Check size={10} /></span>{r.topic} · {r.usLabel}</div>
+              <h4>{r.usHead}</h4>
+              <p>{r.usLine}</p>
+            </div>
+          </div>
+        )}
+      </div>
+
+      <div className="gap-strip">
+        <div>
+          <div className="stamp"><span className="ln"></span>The gap we fill</div>
+          <h3>One <em>uncompromising identity</em> for the person who moves through their whole life with intention.</h3>
+        </div>
+        <div className="right">
+          <p className="body">No brand anywhere currently builds premium activewear, sportswear, athleisure, and everyday easy-wear under one completely owned, uncompromising identity. designed for the person who moves through their whole life with intention.</p>
+          <div className="that">That is Rivlet.</div>
+          <div className="seal"><span className="av">R</span><span>One studio. Four collections. One promise.</span></div>
+        </div>
+      </div>
+    </section>);
+
+}
+
+function Promises() {
+  const techs = [
+  { n: "01", name: "AquaFlow", desc: <>Moisture moves <em>through, not into.</em></>, tag: "Moisture tech", bg: "assets/tech-aquaflow.jpg" },
+  { n: "02", name: "SecondSkin", desc: <>Seamless. Zero <em>distraction.</em></>, tag: "Seamless knit", bg: "assets/tech-secondskin.jpg" },
+  { n: "03", name: "NeutralCore", desc: <>Anti-odour, <em>worn or rinsed.</em></>, tag: "Anti-odour", bg: "assets/tech-neutralcore.jpg" },
+  { n: "04", name: "TerraWeave", desc: <>Cotton, hemp, <em>linen — blended.</em></>, tag: "Natural blend", bg: "assets/tech-terraweave.jpg" },
+  { n: "05", name: "CloudPress", desc: <>Compression that <em>breathes back.</em></>, tag: "Compression", bg: "assets/tech-cloudpress.jpg" },
+  { n: "06", name: "EcoThread", desc: <>Recycled yarn, <em>first-life feel.</em></>, tag: "Recycled yarns", bg: "assets/tech-ecothread.jpg" }];
+
+  const Glyph = ({ kind }) => {
+    const common = { fill: "none", stroke: "currentColor", strokeWidth: 1.2 };
+    if (kind === "drop") return <svg viewBox="0 0 100 100"><path d="M50 10 C25 45 25 70 50 90 C75 70 75 45 50 10Z" {...common} /></svg>;
+    if (kind === "ring") return <svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="38" {...common} /><circle cx="50" cy="50" r="24" {...common} /></svg>;
+    if (kind === "hex") return <svg viewBox="0 0 100 100"><polygon points="50,8 88,30 88,70 50,92 12,70 12,30" {...common} /></svg>;
+    if (kind === "leaf") return <svg viewBox="0 0 100 100"><path d="M20 80 C20 40 40 20 80 20 C80 60 60 80 20 80Z" {...common} /><path d="M20 80 L80 20" {...common} /></svg>;
+    if (kind === "wave") return <svg viewBox="0 0 100 100"><path d="M5 50 Q25 30 45 50 T85 50" {...common} /><path d="M5 65 Q25 45 45 65 T85 65" {...common} /><path d="M5 35 Q25 15 45 35 T85 35" {...common} /></svg>;
+    if (kind === "loop") return <svg viewBox="0 0 100 100"><path d="M30 30 C50 10 80 30 70 50 C60 70 30 70 30 50 C30 30 60 30 70 50" {...common} /></svg>;
+    return null;
+  };
+
+  // duplicate for seamless marquee
+  const loop = [...techs, ...techs];
+
+  return (
+    <section className="fab" id="promises">
+      <div className="fab-head">
+        <div>
+          <div className="eyebrow">— Tech</div>
+          <h2 className="disp">Fabric is not a detail.<br /><em>It is the entire point.</em></h2>
+        </div>
+        <div className="meta">Six proprietary fabric platforms.<br />Engineered in-house. Named, tracked, perfected — and held to a single standard: disappear on the body.</div>
+      </div>
+
+      <div className="fab-track-wrap">
+        <div className="fab-track">
+          {loop.map((t, i) =>
+          <div className="fab-card" key={i}>
+              <div className="bg" style={{ backgroundImage: `url("${t.bg}")` }}></div>
+              <div className="scrim"></div>
+              <div>
+                <div className="num">— {t.n}</div>
+                <div className="name" style={{ marginTop: 14 }}>{t.name}<span className="tm">™</span></div>
+                <div className="desc" style={{ marginTop: 18 }}>{t.desc}</div>
+              </div>
+              <div className="tag">{t.tag}</div>
+            </div>
+          )}
+        </div>
+      </div>
+    </section>);
+
+}
+
+function Standards() {
+  const rows = [
+  { n: "01", t: <>Premium, without the <em>price theatre.</em></>, d: "Fabric we'd wear ourselves, cuts that hold their shape after fifty washes, and pricing that respects the people on both sides of the label." },
+  { n: "02", t: <>One wardrobe, <em>every hour.</em></>, d: "Activewear to easy wear, in the same closet, with the same standards. Designed to cross over — gym, street, flight, dinner." },
+  { n: "03", t: <>Indian-crafted, <em>globally worn.</em></>, d: "Cut and sewn in India, by people we know, with materials we vouch for. Engineered to be benchmarked against the best — and to win." },
+  { n: "04", t: <>Move like water, <em>feel like air.</em></>, d: "Soft hands. Quiet seams. Fabrics that breathe and recover. A garment should disappear on the body and only be felt as confidence." },
+  { n: "05", t: <>Zero compromise. <em>Always.</em></>, d: "On fabric, on fit, on finish, on fairness. If a corner has to be cut, we don't ship it. The label is the promise." }];
+
+  return (
+    <section className="promises" id="standards">
+      <div className="p-head">
+        <h2 className="disp">Five things we will <em>never</em> compromise on.</h2>
+        <div className="meta">A working draft of our standards. Read it. Hold us to it.</div>
+      </div>
+      <div className="p-list">
+        {rows.map((r, i) =>
+        <div className="p-row" key={i}>
+            <div className="num">— {r.n}</div>
+            <div className="ttl">{r.t}</div>
+            <div className="bd">{r.d}</div>
+          </div>
+        )}
+      </div>
+    </section>);
+
+}
+
+function CTA() {
+  const [email, setEmail] = useState("");
+  const [done, setDone] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  // pseudo-random but stable position number per session
+  const [position] = useState(() => 200 + Math.floor(Math.random() * 180));
+
+  useEffect(() => {
+    if (!showModal) return;
+    const onKey = (e) => {if (e.key === "Escape") setShowModal(false);};
+    document.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    return () => {document.removeEventListener("keydown", onKey);document.body.style.overflow = "";};
+  }, [showModal]);
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return;
+    setLoading(true);
+    setError("");
+    try {
+      if (typeof window.__rivletSaveSubscriber === "function") {
+        await window.__rivletSaveSubscriber(email);
+      }
+      if (typeof window.__rivletSendEmails === "function") {
+        await window.__rivletSendEmails(email);
+      }
+      setDone(true);
+      setShowModal(true);
+    } catch (err) {
+      console.error("Subscription error:", err);
+      setError("Something went wrong — please try again in a moment.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Confetti pieces — generated once
+  const confetti = React.useMemo(() => {
+    const cls = ["", "gold", "cardamom", "thin", "gold thin"];
+    return Array.from({ length: 38 }).map((_, i) => ({
+      lx: (Math.random() * 100).toFixed(1) + "%",
+      tx: (Math.random() * 120 - 60).toFixed(0) + "px",
+      d: (1.8 + Math.random() * 1.6).toFixed(2) + "s",
+      dl: (Math.random() * 0.5).toFixed(2) + "s",
+      cls: cls[i % cls.length]
+    }));
+  }, []);
+
+  return (
+    <section className="cta" id="join">
+      <h2>You <em>belong</em> here.</h2>
+      <p>The list is small on purpose. <span style={{ color: "var(--gold)" }}>An early-access discount</span>, first drops, and the founder's notes — written from the river, sent at dawn.</p>
+      <div className="cta-perks">
+        <span className="chip"><span className="o"><Check size={11} /></span><strong>15% off</strong> first drop</span>
+        <span className="chip"><span className="o"><Check size={11} /></span>First access · before public</span>
+        <span className="chip"><span className="o"><Check size={11} /></span>Founder's note from Madurai</span>
+      </div>
+      <form className="capture" onSubmit={onSubmit}>
+        <input type="email" placeholder="your@email.com" value={email} onChange={(e) => setEmail(e.target.value)} aria-label="Email" />
+        <button type="submit" disabled={loading} style={{ opacity: loading ? .7 : 1, transition: "opacity .2s" }}>
+          {loading ? "Joining…" : "Claim my spot"}
+        </button>
+      </form>
+      {error && <div style={{ fontFamily: "var(--mono)", fontSize: 12, letterSpacing: ".12em", color: "var(--gold)", marginTop: 12 }}>{error}</div>}
+      <div className={"capture-msg" + (done ? " in" : "")}>You're on the list. We'll write at first light.</div>
+      <div className="cta-fine">No spam · Unsubscribe in one click · Capped at 1,000 names</div>
+
+      {showModal &&
+      <div className="mdl-overlay" onClick={(e) => {if (e.target === e.currentTarget) setShowModal(false);}}>
+          <div className="mdl-card" role="dialog" aria-modal="true" aria-labelledby="welcome-title">
+            <div className="mdl-confetti" aria-hidden="true">
+              {confetti.map((c, i) =>
+            <i key={i} className={c.cls} style={{ "--lx": c.lx, "--tx": c.tx, "--d": c.d, "--dl": c.dl }}></i>
+            )}
+            </div>
+            <button className="mdl-close" onClick={() => setShowModal(false)} aria-label="Close">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="6" y1="6" x2="18" y2="18" /><line x1="18" y1="6" x2="6" y2="18" /></svg>
+            </button>
+
+            <div className="mdl-seal">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+            </div>
+
+            <div className="mdl-eye"><span className="ln"></span>Founders' list · Welcome<span className="ln r"></span></div>
+
+            <h3 id="welcome-title">Thank you. You just joined a <em>quiet revolution.</em></h3>
+
+            <p className="lede">
+              Thank you for sharing your email address. From this moment on, you're not a customer on a list. You're a <em>founding voice</em> shaping how India dresses the world.
+            </p>
+
+            <div className="mdl-quote">
+              "Premium is no longer imported.<br />It is woven, here, with intention."
+            </div>
+
+            <div className="mdl-meta">
+              <span className="pos">No. {position} of 1,000</span>
+              <span className="sep"></span>
+              <span>Madurai studio</span>
+              <span className="sep"></span>
+              <span>Sent at first light</span>
+            </div>
+
+            <button className="mdl-cta" onClick={() => setShowModal(false)}>
+              <span>Carry on, quietly</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg>
+            </button>
+
+            <div className="mdl-share">A founder's note will reach {email.replace(/(.{2}).+(@.+)/, "$1•••$2")} shortly.</div>
+          </div>
+        </div>
+      }
+    </section>);
+
+}
+
+function Footer() {
+  return (
+    <footer className="bot" id="journal">
+      <div className="foot-grid">
+        <div>
+          <div className="foot-mark">Rivlet</div>
+          <p style={{ fontSize: 14, color: "var(--ink-70)", maxWidth: "32ch", lineHeight: 1.6 }}>Premium Indian activewear, sportswear, athleisure and easy wear. Indian-crafted. Globally worn. Zero compromise.</p>
+        </div>
+        <div>
+          <h4>Studio</h4>
+          <ul><li>Madurai</li><li>Tamil Nadu, India</li><li>09°55′ N · 78°07′ E</li></ul>
+        </div>
+        <div>
+          <h4>Write to us</h4>
+          <ul>
+            <li><a href="mailto:hello@therivlet.com">hello@therivlet.com</a></li>
+            <li><a href="mailto:press@therivlet.com">support@therivlet.com</a></li>
+            <li><a href="mailto:work@therivlet.com">Partners@therivlet.com</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Elsewhere</h4>
+          <ul>
+            <li><a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="5" /><circle cx="12" cy="12" r="4" /><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" /></svg>Instagram</a></li>
+            <li><a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-2C18.88 4 12 4 12 4s-6.88 0-8.59.42a2.78 2.78 0 0 0-1.95 2A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 2C5.12 20 12 20 12 20s6.88 0 8.59-.42a2.78 2.78 0 0 0 1.95-2A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z" /><polygon points="9.75,15.02 15.5,12 9.75,8.98" fill="currentColor" stroke="none" /></svg>YouTube</a></li>
+            <li><a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z" /><rect x="2" y="9" width="4" height="12" /><circle cx="4" cy="4" r="2" /></svg>LinkedIn</a></li>
+          </ul>
+        </div>
+      </div>
+      <div className="foot-base">
+        <span>© 2026 Rivlet · All rights reserved</span>
+        <span>Move like water · Feel like air</span>
+        <span>Coming Soon · v0.3 · Stellar</span>
+      </div>
+    </footer>);
+
+}
+
+function App() {
+  return (
+    <>
+      <Nav />
+      <Hero />
+      <Difference />
+      <Vision />
+      <Promises />
+      <Standards />
+      <CTA />
+      <Footer />
+    </>);
+
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>
