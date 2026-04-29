@@ -57,10 +57,17 @@
   .anim-dialog{animation:fadeInDialog .55s cubic-bezier(.2,.7,.2,1) forwards}
 
   /* ---------- Nav ---------- */
+  .nav-spacer{flex-shrink:0;width:100%;pointer-events:none}
   nav.top{
     padding:max(12px, env(safe-area-inset-top)) var(--page-pad-lg) clamp(14px, 3vw, 18px);
     display:flex;align-items:center;justify-content:space-between;
     max-width:80rem;margin:0 auto;gap:12px;
+  }
+  /* Fixed bar for first ~70% of scroll depth (see Nav.tsx); then returns to document flow */
+  nav.top.nav--pinned{
+    position:fixed;top:0;left:0;right:0;z-index:40;
+    max-width:none;width:100%;margin:0;
+    background:var(--bg);
   }
   .brand{display:flex;align-items:center;gap:10px;min-width:0;flex-shrink:1}
   .brand-text{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -118,18 +125,29 @@
     }
     .hero-soon-line + .hero-soon-line{margin-top:0 !important}
   }
-  /* Flat-lay fabric accents — tune placement via --fab-* (desktop + mobile overrides below) */
-  .hero-fabric-float{
-    /* Lower band: sits behind CTA + tab row (still z0 under .hero-soon-fg) */
-    --fab-top-y:clamp(40%, 46%, 58%);
-    --fab-top-shift-y:clamp(10px, 2.5vh, 28px);
-    --fab-top-nudge-x:min(5vw, 72px);
-    --fab-right-x:clamp(10px, 6vw, 96px);
-    --fab-right-y:clamp(30%, 36vh, 52%);
+  /* Fabric band: after tabs, above 2nd “Coming soon”, overlaps .ed-show (deck z-index higher) */
+  .hero-fabric-cluster{
+    position:relative;
+    z-index:0;
+    min-height:clamp(128px, 28vw, 280px);
+    margin-top:clamp(-6px, -0.8vw, 0px);
+    margin-bottom:clamp(-44px, -9vw, -18px);
+    pointer-events:none;
+    overflow:visible;
+  }
+  .hero-fabric-cluster .hero-fabric-left-ledge,
+  .hero-fabric-cluster .hero-fabric-float{
     position:absolute;left:50%;transform:translateX(-50%);
     width:100vw;top:0;bottom:0;
-    pointer-events:none;z-index:0;
-    overflow:visible;
+    pointer-events:none;overflow:visible;
+  }
+  .hero-fabric-cluster .hero-fabric-left-ledge{z-index:0}
+  .hero-fabric-cluster .hero-fabric-float{z-index:0}
+  .hero-fabric-float{
+    --fab-top-nudge-x:min(5vw, 72px);
+    --fab-top-lift:clamp(0px, 2vw, 16px);
+    --fab-right-x:clamp(10px, 6vw, 96px);
+    --fab-right-lift:clamp(4px, 1.2vw, 14px);
   }
   .hero-fabric{
     position:absolute;
@@ -138,66 +156,131 @@
     box-shadow:0 22px 56px rgba(14,11,7,.1), 0 0 0 1px rgba(14,11,7,.06);
     opacity:0.93;
   }
+  /* Transparent PNG cutouts: full artwork visible, soft lift — no card frame */
+  .hero-fabric--cutout{
+    border-radius:0;
+    overflow:visible;
+    box-shadow:none;
+    background:transparent;
+    opacity:1;
+  }
+  .hero-fabric--cutout .hero-fabric-stack{
+    filter:drop-shadow(0 22px 44px rgba(14,11,7,.1)) drop-shadow(0 6px 16px rgba(14,11,7,.06));
+  }
   .hero-fabric img{width:100%;height:100%;object-fit:cover;display:block}
+  .hero-fabric--cutout img.hero-fabric-layer,
+  .hero-fabric--cutout .hero-fabric-layer{object-fit:contain;object-position:center}
+  .hero-fabric-stack{
+    position:relative;display:block;width:100%;height:100%;
+  }
+  .hero-fabric-layer{
+    position:absolute;inset:0;width:100%;height:100%;
+    object-fit:cover;display:block;
+    transition:opacity .78s cubic-bezier(.22,1,.36,1);
+    will-change:opacity;
+    backface-visibility:hidden;
+  }
+  .hero-fabric--cutout .hero-fabric-layer{
+    inset:clamp(0px,0.6vw,8px);
+  }
+  .hero-fabric-stack--instant .hero-fabric-layer{transition:none}
   .hero-fabric--top{
     width:clamp(130px, 19vw, 232px);
-    aspect-ratio:4/3;
-    top:var(--fab-top-y);
+    aspect-ratio:1/1;
+    top:auto;
     left:50%;
-    transform:translate(calc(-50% + var(--fab-top-nudge-x)), var(--fab-top-shift-y)) rotate(-3.5deg);
+    bottom:clamp(6%, 12%, 22%);
+    transform:translate(calc(-50% + var(--fab-top-nudge-x)), calc(-1 * var(--fab-top-lift))) rotate(-3.5deg);
   }
-  /* Left flat-lay: above “Coming soon” watermark (z1), under hero copy (.hero-soon-fg z2) */
   .hero-fabric-left-ledge{
-    --fab-ledge-top:clamp(20vh, 28vh, 38vh);
-    --fab-ledge-top-nudge:-8px;
-    --fab-ledge-tuck:8%;
     --fab-ledge-left-nudge:-18px;
-    position:absolute;left:50%;transform:translateX(-50%);
-    width:100vw;top:0;bottom:0;
-    pointer-events:none;z-index:1;
-    overflow:visible;
+    --fab-ledge-bottom-nudge:clamp(-20px, -3vw, 4px);
   }
   .hero-fabric-left-ledge .hero-fabric--left{
     width:clamp(140px, 22vw, 276px);
     aspect-ratio:5/4;
     left:calc(max(var(--page-pad-lg),calc((100vw - min(100vw,80rem)) * 0.5 + var(--page-pad-lg))) + var(--fab-ledge-left-nudge));
-    top:calc(var(--fab-ledge-top) + var(--fab-ledge-top-nudge));
-    transform:translateY(var(--fab-ledge-tuck)) rotate(-10deg);
-    transform-origin:50% 0;
+    top:auto;
+    bottom:var(--fab-ledge-bottom-nudge);
+    transform:translateY(18%) rotate(-10deg);
+    transform-origin:50% 100%;
   }
   .hero-fabric--right{
     width:clamp(118px, 17vw, 208px);
     aspect-ratio:4/5;
+    top:auto;
     right:var(--fab-right-x);
-    top:var(--fab-right-y);
-    transform:rotate(9deg);
+    bottom:clamp(8%, 14%, 24%);
+    transform:translateY(calc(-1 * var(--fab-right-lift))) rotate(9deg);
+  }
+  /* PNG cutouts — larger; scoped under .hero-fabric-cluster */
+  .hero-fabric-cluster .hero-fabric-left-ledge .hero-fabric--cutout.hero-fabric--left{
+    width:clamp(230px, 42vw, 560px);
+    aspect-ratio:1/1;
+  }
+  .hero-fabric-cluster .hero-fabric-float .hero-fabric--cutout.hero-fabric--top{
+    width:clamp(210px, 38vw, 500px);
+    aspect-ratio:1/1;
+  }
+  .hero-fabric-cluster .hero-fabric-float .hero-fabric--cutout.hero-fabric--right{
+    width:clamp(195px, 34vw, 450px);
+    aspect-ratio:1/1;
   }
   @media (max-width:900px){
+    .hero-fabric-cluster{
+      min-height:clamp(104px, 36vw, 220px);
+      margin-bottom:clamp(-36px, -8vw, -14px);
+    }
     .hero-fabric-float{
-      --fab-top-y:clamp(36%, 44%, 56%);
-      --fab-top-shift-y:clamp(8px, 2vh, 22px);
       --fab-top-nudge-x:min(3vw, 40px);
-      --fab-right-x:clamp(4px, 4vw, 28px);
-      --fab-right-y:clamp(36%, 40vh, 54%);
+      --fab-top-lift:clamp(0px, 1.5vw, 10px);
+      --fab-right-x:clamp(2px, 3vw, 20px);
+      --fab-right-lift:clamp(2px, 1vw, 8px);
     }
     .hero-fabric-left-ledge{
-      --fab-ledge-top:clamp(26vh, 34vh, 48vh);
-      --fab-ledge-top-nudge:-6px;
-      --fab-ledge-tuck:8%;
       --fab-ledge-left-nudge:-12px;
+      --fab-ledge-bottom-nudge:clamp(-16px, -2.5vw, 6px);
     }
     .hero-fabric-left-ledge .hero-fabric--left{
       width:clamp(108px, 32vw, 200px);
       left:calc(max(var(--page-pad),calc((100vw - min(100vw,80rem)) * 0.5 + var(--page-pad))) + var(--fab-ledge-left-nudge));
-      top:calc(var(--fab-ledge-top) + var(--fab-ledge-top-nudge));
-      transform:translateY(var(--fab-ledge-tuck)) rotate(-7deg);
-      transform-origin:50% 0;
+      transform:translateY(14%) rotate(-7deg);
     }
-    .hero-fabric{opacity:0.86}
-    .hero-fabric--top{width:clamp(108px, 28vw, 168px)}
+    .hero-fabric:not(.hero-fabric--cutout){opacity:0.86}
+    .hero-fabric--top{
+      width:clamp(108px, 28vw, 168px);
+      bottom:clamp(4%, 10%, 18%);
+    }
     .hero-fabric--right{
       width:clamp(92px, 28vw, 144px);
-      transform:rotate(6deg);
+      bottom:clamp(5%, 12%, 20%);
+      transform:translateY(calc(-1 * var(--fab-right-lift))) rotate(6deg);
+    }
+    .hero-fabric-cluster .hero-fabric-left-ledge .hero-fabric--cutout.hero-fabric--left{
+      width:clamp(158px, 52vw, min(380px, 96vw));
+    }
+    .hero-fabric-cluster .hero-fabric-float .hero-fabric--cutout.hero-fabric--top{
+      width:clamp(145px, 48vw, min(330px, 94vw));
+    }
+    .hero-fabric-cluster .hero-fabric-float .hero-fabric--cutout.hero-fabric--right{
+      width:clamp(128px, 44vw, min(300px, 94vw));
+    }
+  }
+  @media (max-width:520px){
+    .hero-fabric-cluster{
+      min-height:clamp(96px, 42vw, 180px);
+      margin-top:clamp(-4px, -1vw, 0px);
+    }
+    .hero-fabric--top{bottom:clamp(2%, 8%, 14%)}
+    .hero-fabric--right{bottom:clamp(3%, 10%, 16%)}
+    .hero-fabric-cluster .hero-fabric-left-ledge .hero-fabric--cutout.hero-fabric--left{
+      width:clamp(132px, 56vw, 300px);
+    }
+    .hero-fabric-cluster .hero-fabric-float .hero-fabric--cutout.hero-fabric--top{
+      width:clamp(120px, 52vw, 255px);
+    }
+    .hero-fabric-cluster .hero-fabric-float .hero-fabric--cutout.hero-fabric--right{
+      width:clamp(112px, 50vw, 232px);
     }
   }
   .hero-soon-line {
@@ -235,8 +318,12 @@
     padding-top:clamp(10px, 2.5vh, 28px);
     padding-bottom:0;
   }
-  .hero-soon-fg .tabs-wrap{margin-bottom:0;padding-bottom:clamp(22px, 3.5vw, 54px)}
-  .hero-ed-deck{margin-top:0;position:relative;z-index:2}
+  .hero-soon-fg .tabs-wrap{margin-bottom:0;padding-bottom:clamp(12px, 2.2vw, 36px)}
+  /* Above fabric band overlap; below nav/modals */
+  .hero-ed-deck{margin-top:clamp(-32px,-4.2vw,-8px);position:relative;z-index:4}
+  @media (max-width:900px){
+    .hero-ed-deck{margin-top:clamp(-24px,-4.5vw,-4px)}
+  }
 
   .badge{
     display:inline-flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;
@@ -921,16 +1008,37 @@
   .nav-burger{display:none;align-items:center;justify-content:center;width:44px;height:44px;border-radius:12px;border:1px solid var(--ink-10);background:var(--bg);color:var(--ink);padding:0;flex-shrink:0;transition:background .2s}
   .nav-burger:hover{background:var(--bg-soft);border-color:var(--ink-30)}
   @media (max-width:879px){
-    .nav-burger{display:inline-flex}
+    .nav-burger{display:inline-flex;order:2}
+    .nav-right .pill{order:1}
   }
   .nav-skip{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0;white-space:nowrap}
   .nav-drawer-back{position:fixed;inset:0;background:rgba(14,11,7,.45);z-index:900;opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s}
   .nav-drawer-back.open{opacity:1;visibility:visible}
   .nav-drawer{position:fixed;top:0;right:0;width:min(100vw - 40px,320px);height:100%;background:var(--bg);z-index:901;box-shadow:-8px 0 40px rgba(14,11,7,.12);padding:24px;transform:translateX(100%);visibility:hidden;pointer-events:none;transition:transform .35s cubic-bezier(.2,.7,.2,1),visibility .35s;display:flex;flex-direction:column;gap:8px}
   .nav-drawer.open{transform:translateX(0);visibility:visible;pointer-events:auto}
-  .nav-drawer a{font-size:clamp(14px, 3.6vw, 16px);color:var(--ink-70);font-weight:500;padding:14px 4px;border-bottom:1px solid var(--ink-10);min-height:44px;display:flex;align-items:center;gap:6px;transition:color .2s}
-  .nav-drawer a:hover,.nav-drawer a:focus{color:var(--ink);outline:none}
-  .nav-drawer-cta{margin-top:16px;align-self:stretch}
+  /* Exclude CTA: .nav-drawer a would override .pill and hide label (ink-70 on ink bg) */
+  .nav-drawer a:not(.nav-drawer-cta){
+    font-size:clamp(14px, 3.6vw, 16px);
+    color:var(--ink-70);
+    font-weight:500;
+    padding:14px 4px;
+    border-bottom:1px solid var(--ink-10);
+    min-height:44px;
+    display:flex;
+    align-items:center;
+    gap:6px;
+    transition:color .2s;
+  }
+  .nav-drawer a:not(.nav-drawer-cta):hover,
+  .nav-drawer a:not(.nav-drawer-cta):focus{color:var(--ink);outline:none}
+  .nav-drawer-cta{
+    margin-top:16px;
+    align-self:stretch;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+  }
   @media (max-width:380px){
     .pill{padding:9px 12px;font-size:12px}
   }

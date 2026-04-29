@@ -17,7 +17,6 @@ export function Footer() {
           <ul>
             <li>Madurai</li>
             <li>Tamil Nadu, India</li>
-            <li>09°55′ N · 78°07′ E</li>
           </ul>
         </div>
         <div>

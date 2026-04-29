@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Brand } from "./Brand";
 import { ChevronDown, Menu } from "./icons";
 
@@ -17,11 +17,17 @@ function scrollTo(href: string) {
   document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
 }
 
+/** Pin header with `position: fixed` until this fraction of total scroll depth (0–1). */
+const PIN_UNTIL_SCROLL = 0.7;
+
 export function Nav() {
   const [open, setOpen] = useState(false);
   const [navReveal, setNavReveal] = useState<NavReveal>("pending");
+  const [navPinned, setNavPinned] = useState(true);
+  const [navSpacerH, setNavSpacerH] = useState(0);
   const closeRef = useRef<HTMLButtonElement>(null);
   const firstLinkRef = useRef<HTMLAnchorElement>(null);
+  const navRef = useRef<HTMLElement>(null);
   const navRevealSettled = useRef(false);
 
   useEffect(() => {
@@ -68,6 +74,37 @@ export function Nav() {
     };
   }, []);
 
+  useLayoutEffect(() => {
+    const el = navRef.current;
+    if (!el) return;
+    const measure = () => setNavSpacerH(Math.ceil(el.getBoundingClientRect().height));
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [navReveal]);
+
+  useEffect(() => {
+    const updatePin = () => {
+      const doc = document.documentElement;
+      const maxScroll = doc.scrollHeight - window.innerHeight;
+      const p = maxScroll <= 1 ? 0 : window.scrollY / maxScroll;
+      setNavPinned(p < PIN_UNTIL_SCROLL);
+    };
+    updatePin();
+    window.addEventListener("scroll", updatePin, { passive: true });
+    window.addEventListener("resize", updatePin, { passive: true });
+    const ro = new ResizeObserver(updatePin);
+    ro.observe(document.documentElement);
+    const main = document.getElementById("main");
+    if (main) ro.observe(main);
+    return () => {
+      window.removeEventListener("scroll", updatePin);
+      window.removeEventListener("resize", updatePin);
+      ro.disconnect();
+    };
+  }, []);
+
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
@@ -89,11 +126,16 @@ export function Nav() {
       <a href="#main" className="nav-skip">
         Skip to content
       </a>
+      {navPinned && navSpacerH > 0 ? (
+        <div className="nav-spacer" style={{ height: navSpacerH }} aria-hidden="true" />
+      ) : null}
       <nav
+        ref={navRef}
         className={
           "top anim" +
           (navReveal !== "pending" ? " anim-in" : "") +
-          (navReveal === "instant" ? " anim-instant" : "")
+          (navReveal === "instant" ? " anim-instant" : "") +
+          (navPinned ? " nav--pinned" : "")
         }
         style={{ animationDelay: navReveal === "animate" ? ".1s" : undefined }}
         aria-label="Primary"

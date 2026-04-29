@@ -1,10 +1,6 @@
 import { Fragment, useEffect, useRef, useState } from "react";
 import { TABS, type TabKey } from "../data/tabs";
-
-/** Same files as `public/assets/` (served at `/assets/…`) — tabs, CSS, and Promises use these paths too. */
-const fabFloatLeft = "/assets/fabric-2.jpg";
-const fabFloatRight = "/assets/fabric-3.jpg";
-const fabFloatTop = "/assets/fabric-1.jpg";
+import { CrossfadeFabricImg } from "./CrossfadeFabricImg";
 import { useRevealOnScroll } from "../hooks/useRevealOnScroll";
 import { ArrowRight, Star } from "./icons";
 
@@ -31,6 +27,7 @@ export function Hero() {
     return () => clearInterval(id);
   }, []);
   const active = TABS.find((t) => t.key === tab) ?? TABS[0]!;
+  const { left: fabLeft, top: fabTop, right: fabRight } = active.heroFloats;
 
   return (
     <section
@@ -51,19 +48,6 @@ export function Hero() {
           <div className="hero-soon-bg" aria-hidden="true">
             <span className="hero-soon-line">Coming soon</span>
             <span className="hero-soon-line">Coming soon</span>
-          </div>
-          <div className="hero-fabric-left-ledge" aria-hidden="true">
-            <div className="hero-fabric hero-fabric--left">
-              <img src={fabFloatLeft} alt="" decoding="async" />
-            </div>
-          </div>
-          <div className="hero-fabric-float" aria-hidden="true">
-            <div className="hero-fabric hero-fabric--top">
-              <img src={fabFloatTop} alt="" decoding="async" />
-            </div>
-            <div className="hero-fabric hero-fabric--right">
-              <img src={fabFloatRight} alt="" decoding="async" />
-            </div>
           </div>
           <div className="hero-soon-fg">
             <div className="badge anim" style={{ animationDelay: ".2s" }}>
@@ -122,6 +106,23 @@ export function Hero() {
                     </Fragment>
                   );
                 })}
+              </div>
+            </div>
+          </div>
+
+          {/* Between tab row + bottom “Coming soon”; bridges toward “Rivlet in practice” */}
+          <div className="hero-fabric-cluster" aria-hidden="true">
+            <div className="hero-fabric-left-ledge">
+              <div className="hero-fabric hero-fabric--cutout hero-fabric--left">
+                <CrossfadeFabricImg src={fabLeft} />
+              </div>
+            </div>
+            <div className="hero-fabric-float">
+              <div className="hero-fabric hero-fabric--cutout hero-fabric--top">
+                <CrossfadeFabricImg src={fabTop} />
+              </div>
+              <div className="hero-fabric hero-fabric--cutout hero-fabric--right">
+                <CrossfadeFabricImg src={fabRight} />
               </div>
             </div>
           </div>
