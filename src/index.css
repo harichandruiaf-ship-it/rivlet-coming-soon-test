@@ -1008,8 +1008,28 @@
   .nav-burger{display:none;align-items:center;justify-content:center;width:44px;height:44px;border-radius:12px;border:1px solid var(--ink-10);background:var(--bg);color:var(--ink);padding:0;flex-shrink:0;transition:background .2s}
   .nav-burger:hover{background:var(--bg-soft);border-color:var(--ink-30)}
   @media (max-width:879px){
-    .nav-burger{display:inline-flex;order:2}
-    .nav-right .pill{order:1}
+    /* Shorter mobile header: less vertical padding + compact burger / CTA */
+    nav.top{
+      padding:max(6px, env(safe-area-inset-top)) var(--page-pad) clamp(6px, 1.8vw, 12px);
+      gap:8px;
+    }
+    .brand{gap:8px}
+    .brand-mark{width:20px;height:20px}
+    .brand-text{font-size:clamp(15px, 3.4vw, 17px)}
+    .nav-right{gap:6px}
+    .nav-right .pill{
+      order:1;
+      padding:8px min(16px, 3vw);
+      font-size:clamp(11.5px, 2.6vw, 13px);
+    }
+    .nav-burger{
+      display:inline-flex;
+      order:2;
+      width:40px;
+      height:40px;
+      border-radius:10px;
+    }
+    .nav-burger svg{width:18px;height:18px;display:block}
   }
   .nav-skip{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0;white-space:nowrap}
   .nav-drawer-back{position:fixed;inset:0;background:rgba(14,11,7,.45);z-index:900;opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s}
