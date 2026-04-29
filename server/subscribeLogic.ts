@@ -3,8 +3,8 @@ import { dirname, isAbsolute, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { Resend } from "resend";
 import type { ServiceAccount } from "firebase-admin";
-import { buildCustomerWelcomeEmail } from "./emailTemplates/customerWelcome";
-import { buildNotifySubscriberEmail } from "./emailTemplates/notifySubscriber";
+import { buildCustomerWelcomeEmail } from "./emailTemplates/customerWelcome.js";
+import { buildNotifySubscriberEmail } from "./emailTemplates/notifySubscriber.js";
 import { cert, getApps, initializeApp } from "firebase-admin/app";
 import { getFirestore, FieldValue } from "firebase-admin/firestore";
 

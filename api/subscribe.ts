@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { executePostSubscribe } from "../server/subscribeLogic";
+import { executePostSubscribe } from "../server/subscribeLogic.js";
 
 function parseBody(req: VercelRequest): unknown | "invalid-json" {
   const b = req.body;
