@@ -8,6 +8,11 @@ import { buildNotifySubscriberEmail } from "./emailTemplates/notifySubscriber";
 import { cert, getApps, initializeApp } from "firebase-admin/app";
 import { getFirestore, FieldValue } from "firebase-admin/firestore";
 
+/* Vercel serverless: gRPC transport often fails (FUNCTION_INVOCATION_FAILED); REST is supported. */
+if (process.env.VERCEL && process.env.FIRESTORE_PREFER_REST == null) {
+  process.env.FIRESTORE_PREFER_REST = "true";
+}
+
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 /** Vercel/Linux env keys are case-sensitive; .env imports sometimes preserve different casing. */
