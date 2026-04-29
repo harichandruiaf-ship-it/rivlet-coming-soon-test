@@ -10,6 +10,15 @@ import { getFirestore, FieldValue } from "firebase-admin/firestore";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+/** Vercel/Linux env keys are case-sensitive; .env imports sometimes preserve different casing. */
+function envFirst(...keys: string[]): string | undefined {
+  for (const k of keys) {
+    const v = process.env[k]?.trim();
+    if (v) return v;
+  }
+  return undefined;
+}
+
 /** Repo root (folder that contains package.json), not process.cwd() — cwd can differ when starting Vite. */
 function findPackageRoot(startDir: string): string {
   let dir = startDir;
@@ -50,26 +59,27 @@ function parseServiceAccountJson(): ServiceAccount {
     process.env.FIREBASE_SERVICE_ACCOUNT_FILE?.trim();
   if (pathEnv) {
     const abs = resolveServiceAccountFilePath(pathEnv);
-    if (!existsSync(abs)) {
-      throw new Error(
-        `FIREBASE_SERVICE_ACCOUNT_PATH file not found: ${abs} (resolved from repo root ${PACKAGE_ROOT})`,
-      );
+    if (existsSync(abs)) {
+      const fileRaw = readFileSync(abs, "utf8").trim();
+      try {
+        return JSON.parse(fileRaw) as ServiceAccount;
+      } catch (parseErr) {
+        console.error("service account file JSON.parse failed", parseErr);
+        throw new Error(
+          "FIREBASE_SERVICE_ACCOUNT_PATH must point to a valid Firebase service account JSON file.",
+        );
+      }
     }
-    const fileRaw = readFileSync(abs, "utf8").trim();
-    try {
-      return JSON.parse(fileRaw) as ServiceAccount;
-    } catch (parseErr) {
-      console.error("service account file JSON.parse failed", parseErr);
-      throw new Error(
-        "FIREBASE_SERVICE_ACCOUNT_PATH must point to a valid Firebase service account JSON file.",
-      );
-    }
+    /* Local .env often points at a JSON file that is not deployed; fall through to FIREBASE_SERVICE_ACCOUNT. */
+    console.warn(
+      `FIREBASE_SERVICE_ACCOUNT_PATH not found (${abs}); using FIREBASE_SERVICE_ACCOUNT if set (required on Vercel).`,
+    );
   }
 
   let raw = process.env.FIREBASE_SERVICE_ACCOUNT?.trim();
   if (!raw) {
     throw new Error(
-      "Set FIREBASE_SERVICE_ACCOUNT (JSON on one line), or FIREBASE_SERVICE_ACCOUNT_PATH to a JSON file path. .env files cannot hold multi-line JSON without a file path.",
+      "Missing Firebase Admin credentials. Locally: FIREBASE_SERVICE_ACCOUNT_PATH to your JSON file, or FIREBASE_SERVICE_ACCOUNT (one-line JSON). On Vercel: add env var FIREBASE_SERVICE_ACCOUNT with the full service account JSON minified to one line (do not rely on a file path).",
     );
   }
   // Whole JSON wrapped in single quotes is common in .env when the value contains double quotes
@@ -119,9 +129,11 @@ export async function executePostSubscribe(bodyUnknown: unknown): Promise<PostSu
     return { status: 400, body: { error: "Invalid email" } };
   }
 
-  const resendKey = process.env.RESEND_API_KEY;
-  const from = process.env.MAIL_FROM ?? "earlyaccess@therivlet.com";
-  const notifyTo = process.env.MAIL_NOTIFY_TO ?? "earlyaccess@therivlet.com";
+  const resendKey = envFirst("RESEND_API_KEY", "Resend_API_Key");
+  const from =
+    envFirst("MAIL_FROM", "Mail_From") ?? "earlyaccess@therivlet.com";
+  const notifyTo =
+    envFirst("MAIL_NOTIFY_TO", "Mail_Notify_To") ?? "earlyaccess@therivlet.com";
 
   const name = email.split("@")[0] ?? "there";
   const nowIst = new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" });
