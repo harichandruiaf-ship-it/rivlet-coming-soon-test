@@ -1,3 +1,5 @@
+import { useRef } from "react";
+import { useFabricRibbonScroll } from "../hooks/useFabricRibbonScroll";
 import { useRevealOnScroll } from "../hooks/useRevealOnScroll";
 
 const techs: {
@@ -17,6 +19,8 @@ const techs: {
 
 export function Promises() {
   const [fabRef, fabRevealed] = useRevealOnScroll<HTMLElement>({ rootMargin: "0px 0px -11% 0px" });
+  const railRef = useRef<HTMLDivElement>(null);
+  useFabricRibbonScroll(railRef);
   const loop = [...techs, ...techs];
   return (
     <section ref={fabRef} className={"fab section-await" + (fabRevealed ? " reveal-in" : "")} id="promises">
@@ -37,7 +41,12 @@ export function Promises() {
         </div>
       </div>
 
-      <div className="fab-track-wrap">
+      <div
+        ref={railRef}
+        className="fab-track-wrap"
+        tabIndex={0}
+        aria-label="Fabric systems: auto-scrolling ribbon; drag, scroll, or pause by hovering"
+      >
         <div className="fab-track">
           {loop.map((t, i) => (
             <div className="fab-card" key={i}>
