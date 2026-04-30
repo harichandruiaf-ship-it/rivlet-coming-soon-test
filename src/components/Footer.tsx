@@ -8,8 +8,8 @@ export function Footer() {
         <div>
           <div className="foot-mark">Rivlet</div>
           <p style={{ fontSize: 14, color: "var(--ink-70)", maxWidth: "32ch", lineHeight: 1.6 }}>
-            Premium Indian activewear, sportswear, athleisure and easy wear. Indian-crafted. Globally worn. Zero
-            compromise.
+            Premium Indian activewear, sportswear, athleisure and easy wear. Cut in India. Worn worldwide. No
+            compromise on fabric or finish.
           </p>
         </div>
         <div>

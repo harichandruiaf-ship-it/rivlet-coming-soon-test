@@ -11,7 +11,7 @@ function escapeHtml(s: string): string {
     .replace(/"/g, "&quot;");
 }
 
-export const CUSTOMER_WELCOME_SUBJECT = "Welcome to Rivlet — You're on the list";
+export const CUSTOMER_WELCOME_SUBJECT = "Welcome to Rivlet · You're on the list";
 
 export function buildCustomerWelcomeEmail(displayName: string): {
   subject: string;
@@ -23,14 +23,14 @@ export function buildCustomerWelcomeEmail(displayName: string): {
 
   const text = `Hi ${name},
 
-You're on the Rivlet early-access list. We'll write at first light with first drops and founder notes from Madurai.
+You're on the Rivlet early-access list. We will email you when the first drop opens and when there is news worth sending from our Madurai studio.
 
 What happens next
-• You'll be among the first to hear when we open the list for drops and stories from the workshop.
+• You will be among the first to hear about drops and occasional notes from the workshop.
 
-If you didn't sign up, you can ignore this message.
+If you did not sign up, you can ignore this message.
 
-— Rivlet
+Rivlet
 Madurai · Early access
 `;
 
@@ -46,7 +46,7 @@ Madurai · Early access
 </head>
 <body style="margin:0;padding:0;background-color:#EDE8DF;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;">
   <div style="display:none;max-height:0;overflow:hidden;mso-hide:all;">
-    You're on the Rivlet early-access list — first drops &amp; notes from Madurai.
+    You're on the Rivlet early-access list. First notice on drops and studio notes.
   </div>
   <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color:#EDE8DF;">
     <tr>
@@ -79,7 +79,7 @@ Madurai · Early access
                       Hi ${safe},
                     </p>
                     <p style="margin:0 0 36px 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:17px;line-height:1.75;color:rgba(14,11,7,0.78);">
-                      You're on the <strong style="color:#0E0B07;font-weight:600;">Rivlet</strong> early-access list. We'll write at first light with first drops and founder notes from Madurai.
+                      You&apos;re on the <strong style="color:#0E0B07;font-weight:600;">Rivlet</strong> early-access list. We will email you when the first drop opens and when there is news worth sending from our Madurai studio.
                     </p>
                     <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin:0 0 40px 0;">
                       <tr>
@@ -89,7 +89,7 @@ Madurai · Early access
                             What happens next
                           </p>
                           <p style="margin:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:16px;line-height:1.7;color:rgba(14,11,7,0.82);">
-                            You'll be among the first to hear when we open the list for drops and stories from the workshop.
+                            You&apos;ll be among the first to hear about drops and occasional notes from the workshop.
                           </p>
                         </td>
                       </tr>
@@ -102,7 +102,7 @@ Madurai · Early access
                 <tr>
                   <td style="padding:36px 44px 48px 44px;background-color:#F6F1E8;background-image:linear-gradient(180deg,#F9F5EE 0%,#F2EDE3 100%);">
                     <p style="margin:0 0 8px 0;font-family:Georgia,'Times New Roman',serif;font-size:18px;line-height:1.4;color:#0E0B07;font-style:italic;">
-                      — Rivlet
+                      Rivlet
                     </p>
                     <p style="margin:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:12px;letter-spacing:0.18em;text-transform:uppercase;color:#7A5C3A;">
                       Madurai · Early access
@@ -115,7 +115,7 @@ Madurai · Early access
           <tr>
             <td style="padding:32px 8px 0 8px;text-align:center;">
               <p style="margin:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:11px;line-height:1.6;color:rgba(14,11,7,0.38);">
-                Premium Indian activewear &amp; athleisure · Zero compromise
+                Premium Indian activewear and athleisure · No compromise on fabric or finish
               </p>
             </td>
           </tr>

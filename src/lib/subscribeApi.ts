@@ -17,7 +17,7 @@ export async function subscribeEmail(raw: string): Promise<SubscribeResult> {
   });
 
   if (!res.ok) {
-    let msg = "Something went wrong — please try again in a moment.";
+    let msg = "Something went wrong. Please try again in a moment.";
     try {
       const j = (await res.json()) as { error?: string; code?: string | number; hint?: string };
       if (j.error) {

@@ -9,16 +9,16 @@ const pillars = [
         Designed for <em>every body</em>, every climate, every person.
       </>
     ),
-    body: "Premium fabric. Indian ownership. Global standards. At a price point that respects you — no apology for where we come from.",
+    body: "Premium fabric. Indian ownership. Global standards. Pricing that respects the customer and the craft, without apology for where we come from.",
   },
   {
     topic: "On accountability",
     head: (
       <>
-        We don&apos;t just say it — <em>we own it.</em>
+        We say only what the work can support. <em>We own it.</em>
       </>
     ),
-    body: "The supply chain is ours. The label is a promise we keep in the room, on the floor, and in the wash — not a tagline borrowed from elsewhere.",
+    body: "The supply chain is ours. The label is a promise we keep in the fitting room, on the factory floor, and after fifty washes. Not a line borrowed from a mood board.",
   },
 ] as const;
 
@@ -33,7 +33,7 @@ export function Difference() {
             Premium fabric. Indian ownership. <em>Global standards.</em>
           </h2>
         </div>
-        <p className="lede">No apology for where we come from. Read this once, it explains the rest of the wardrobe.</p>
+        <p className="lede">No apology for origin or ambition. Read this once; it frames everything that follows.</p>
       </div>
 
       <div className="cmp cmp-rivlet">
@@ -65,11 +65,10 @@ export function Difference() {
         </div>
         <div className="right">
           <p className="body">
-            No brand anywhere currently builds premium activewear, sportswear, athleisure, and everyday easy-wear under
-            one completely owned, uncompromising identity. designed for the person who moves through their whole life
-            with intention.
+            Few houses unite premium activewear, sportswear, athleisure, and everyday easy wear under one fully owned
+            label, built for people who move through life with intention. Rivlet does.
           </p>
-          <div className="that">That is Rivlet.</div>
+          <div className="that">That house is Rivlet.</div>
           <div className="seal">
             <span className="av">R</span>
             <span>One studio. Four collections. One promise.</span>

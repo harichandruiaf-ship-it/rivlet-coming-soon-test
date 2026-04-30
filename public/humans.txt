@@ -1,0 +1,14 @@
+/* TEAM */
+Studio: Rivlet
+Site: https://therivlet.com
+Social: @therivlet
+From: Madurai, Tamil Nadu, India
+
+/* SITE */
+Last update: 2026
+Standards: HTML5, CSS3, Schema.org
+Stack: Vite, React, TypeScript
+
+/* THANKS */
+To everyone who joins the early list.
+Move like water. Feel like air.

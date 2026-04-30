@@ -28,6 +28,7 @@ export function Hero() {
   }, []);
   const active = TABS.find((t) => t.key === tab) ?? TABS[0]!;
   const { left: fabLeft, top: fabTop, right: fabRight } = active.heroFloats;
+  const fabricVisualAlt = `Rivlet ${active.label}: fabric and silhouette, brand visual`;
 
   return (
     <section
@@ -63,8 +64,8 @@ export function Hero() {
             </h1>
 
             <p className="hero-sub anim" style={{ animationDelay: ".4s" }}>
-              Premium activewear, sportswear, athleisure and easy wear — Indian-crafted to global standards, built
-              without compromise, for the person who lives their whole day in motion.
+              Activewear, sportswear, athleisure and easy wear: Indian-made to global standards, without compromise, for
+              days spent in motion.
             </p>
 
             <button
@@ -114,15 +115,15 @@ export function Hero() {
           <div className="hero-fabric-cluster" aria-hidden="true">
             <div className="hero-fabric-left-ledge">
               <div className="hero-fabric hero-fabric--cutout hero-fabric--left">
-                <CrossfadeFabricImg src={fabLeft} />
+                <CrossfadeFabricImg src={fabLeft} alt={fabricVisualAlt} />
               </div>
             </div>
             <div className="hero-fabric-float">
               <div className="hero-fabric hero-fabric--cutout hero-fabric--top">
-                <CrossfadeFabricImg src={fabTop} />
+                <CrossfadeFabricImg src={fabTop} alt={fabricVisualAlt} />
               </div>
               <div className="hero-fabric hero-fabric--cutout hero-fabric--right">
-                <CrossfadeFabricImg src={fabRight} />
+                <CrossfadeFabricImg src={fabRight} alt={fabricVisualAlt} />
               </div>
             </div>
           </div>
@@ -136,8 +137,7 @@ export function Hero() {
                 A wardrobe for <em>motion.</em>
               </h3>
               <p className="ed-sub">
-                Four ways the same closet shows up — for athletes, for the everyday, for the in-between hours that make
-                up most of a life.
+                One wardrobe, four roles: training, daily life, and the hours between that hold most of a week.
               </p>
             </div>
 

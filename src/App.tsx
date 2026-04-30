@@ -1,10 +1,12 @@
 import { useLayoutEffect } from "react";
 import { CTA } from "./components/CTA";
 import { Difference } from "./components/Difference";
+import { FaqSection } from "./components/FaqSection";
 import { Footer } from "./components/Footer";
 import { Hero } from "./components/Hero";
 import { Nav } from "./components/Nav";
 import { Promises } from "./components/Promises";
+import { SeoJsonLd } from "./components/SeoJsonLd";
 import { Standards } from "./components/Standards";
 import { Vision } from "./components/Vision";
 
@@ -23,15 +25,21 @@ export default function App() {
   }, []);
 
   return (
-    <div id="main">
-      <Nav />
-      <Hero />
-      <Difference />
-      <Vision />
-      <Promises />
-      <Standards />
-      <CTA />
+    <>
+      <SeoJsonLd />
+      <header>
+        <Nav />
+      </header>
+      <main id="main">
+        <Hero />
+        <Difference />
+        <Vision />
+        <Promises />
+        <Standards />
+        <FaqSection />
+        <CTA />
+      </main>
       <Footer />
-    </div>
+    </>
   );
 }

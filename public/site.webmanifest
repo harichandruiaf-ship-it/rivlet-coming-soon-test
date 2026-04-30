@@ -1,0 +1,17 @@
+{
+  "name": "Rivlet",
+  "short_name": "Rivlet",
+  "description": "Premium Indian activewear coming soon",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0C1E34",
+  "theme_color": "#0C1E34",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

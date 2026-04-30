@@ -14,7 +14,7 @@ export function Brand() {
         e.preventDefault();
         scrollPageToTop();
       }}
-      aria-label="Rivlet — scroll to top"
+      aria-label="Rivlet: return to top"
     >
       <div className="brand-mark" style={{ backgroundSize: "contain" }} />
       <div className="brand-text">Rivlet</div>

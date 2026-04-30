@@ -66,7 +66,7 @@ export function CTA() {
       setShowModal(true);
     } catch (err) {
       console.error("Subscription error:", err);
-      setError(err instanceof Error ? err.message : "Something went wrong — please try again in a moment.");
+      setError(err instanceof Error ? err.message : "Something went wrong. Please try again in a moment.");
     } finally {
       setLoading(false);
     }
@@ -78,8 +78,8 @@ export function CTA() {
         You <em>belong</em> here.
       </h2>
       <p>
-        The list is small on purpose. <span style={{ color: "var(--gold)" }}>An early-access discount</span>, first
-        drops, and the founder&apos;s notes — written from the river, sent at dawn.
+        The list stays small by design. <span style={{ color: "var(--gold)" }}>Early-access pricing</span> on the first
+        drop, priority when we open, and occasional notes from the Madurai studio.
       </p>
       <div className="cta-perks">
         <span className="chip">
@@ -116,7 +116,9 @@ export function CTA() {
         </button>
       </form>
       {error && <div className="capture-err">{error}</div>}
-      <div className={"capture-msg" + (done ? " in" : "")}>You&apos;re on the list. We&apos;ll write at first light.</div>
+      <div className={"capture-msg" + (done ? " in" : "")}>
+        You&apos;re on the list. We&apos;ll email you from the studio.
+      </div>
       <div className="cta-fine">No spam · Unsubscribe in one click · Capped at 1,000 names</div>
 
       {showModal &&
@@ -159,26 +161,26 @@ export function CTA() {
                     You&apos;re <em>already</em> on the list.
                   </h3>
                   <p className="lede">
-                    This address is already registered for Rivlet early access. No need to sign up again — we&apos;ll
-                    keep sending founder notes and first drops to this inbox.
+                    This address is already on the Rivlet early-access list. You are all set; we will keep sending studio
+                    notes and drop notices here.
                   </p>
                 </>
               ) : (
                 <>
                   <h3 id="welcome-title">
-                    Thank you. You just joined a <em>quiet revolution.</em>
+                    Thank you. You&apos;re on the <em>early list.</em>
                   </h3>
                   <p className="lede">
-                    Thank you for sharing your email address. From this moment on, you&apos;re not a customer on a
-                    list. You&apos;re a <em>founding voice</em> shaping how India dresses the world.
+                    We will send first notice of drops, occasional notes from the workroom, and the early-access terms
+                    you signed up for. Nothing loud; only what we would want in our own inboxes.
                   </p>
                 </>
               )}
 
               <div className="mdl-quote">
-                &ldquo;Premium is no longer imported.
+                &ldquo;Premium is not only imported.
                 <br />
-                It is woven, here, with intention.&rdquo;
+                It is woven here, on purpose.&rdquo;
               </div>
 
               <div className="mdl-meta">
@@ -188,7 +190,7 @@ export function CTA() {
                     <span className="sep" />
                     <span>Madurai studio</span>
                     <span className="sep" />
-                    <span>Sent at first light</span>
+                    <span>First notice on drops</span>
                   </>
                 ) : (
                   <>
@@ -200,13 +202,13 @@ export function CTA() {
                     <span className="sep" />
                     <span>Madurai studio</span>
                     <span className="sep" />
-                    <span>Sent at first light</span>
+                    <span>First notice on drops</span>
                   </>
                 )}
               </div>
 
               <button type="button" className="mdl-cta" onClick={() => setShowModal(false)}>
-                <span>Carry on, quietly</span>
+                <span>Back to the site</span>
                 <ArrowRight size={14} sw={1.8} />
               </button>
 

@@ -9,7 +9,7 @@ const cards: { n: string; t: ReactNode; p: string }[] = [
         Every ocean <em>begins here.</em>
       </>
     ),
-    p: "Every ocean was first fed by a rivlet. Small water, taken seriously, becomes the sea — we are starting at the source.",
+    p: "Every ocean was first fed by a rivlet. Small water, taken seriously, becomes the sea. We begin at the source.",
   },
   {
     n: "02",
@@ -18,7 +18,7 @@ const cards: { n: string; t: ReactNode; p: string }[] = [
         Rooted in the <em>land.</em>
       </>
     ),
-    p: "Indian textile is older than most countries. We carry that legacy on the label — handlooms, mill cotton, contemporary performance knits.",
+    p: "Indian textile predates most nations. We carry that lineage on the label: handloom, mill cotton, contemporary performance knit.",
   },
   {
     n: "03",
@@ -52,15 +52,15 @@ export function Vision() {
           A small water, <em>moving with intent.</em>
         </h2>
         <p className="lead" style={{ maxWidth: "60ch" }}>
-          The brief, written once: a wardrobe that stays close to the source, and asks for nothing more than to
-          disappear on the body and be felt as confidence.
+          The brief is singular: a wardrobe anchored to its source, cut to disappear on the body and read as quiet
+          confidence.
         </p>
       </div>
       <div className="vision-grid">
         {cards.map((c, i) => (
           <div className="v-card" key={i}>
             <div className="v-num">
-              <span>— {c.n}</span>
+              <span>{c.n}</span>
               <span className="dash" />
               <span>VISION</span>
             </div>

@@ -54,7 +54,7 @@ function firestoreHint(code: string | undefined, message: string): string | unde
   if (c === "9" || c === "FAILED_PRECONDITION" || m.includes("failed precondition"))
     return "Firestore may be in the wrong mode or not fully initialized; check the Firebase console for database setup.";
   if (c === "14" || c === "UNAVAILABLE" || m.includes("unavailable"))
-    return "Firestore temporarily unavailable — retry, or check network / VPN / firewall.";
+    return "Firestore is temporarily unavailable. Retry shortly, or check network, VPN, or firewall settings.";
   return undefined;
 }
 
@@ -96,7 +96,7 @@ function parseServiceAccountJson(): ServiceAccount {
   } catch (parseErr) {
     console.error("FIREBASE_SERVICE_ACCOUNT JSON.parse failed", parseErr);
     throw new Error(
-      "FIREBASE_SERVICE_ACCOUNT must be valid JSON on one line (minify the key file), or use FIREBASE_SERVICE_ACCOUNT_PATH=./your-key.json — multi-line JSON in .env is not supported.",
+      "FIREBASE_SERVICE_ACCOUNT must be valid JSON on one line (minify the key file), or set FIREBASE_SERVICE_ACCOUNT_PATH=./your-key.json. Multi-line JSON in .env is not supported.",
     );
   }
 }

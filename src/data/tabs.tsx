@@ -1,7 +1,7 @@
 import type { ComponentType, ReactNode } from "react";
 import { Activity, Wind, Layers, Leaf } from "../components/icons";
 
-/** Files in `public/assets/` — encode spaces for reliable URLs */
+/** Files in `public/assets/`; encode spaces for reliable URLs */
 function asset(filename: string): string {
   return `/assets/${encodeURIComponent(filename)}`;
 }
@@ -34,15 +34,15 @@ export const TABS: TabDef[] = [
     key: "active",
     label: "Sports",
     icon: Activity,
-    title: "For the work — run, lift, stretch.",
-    tagline: "Built for the work — the run, the lift, the long stretch.",
+    title: "For the work: run, lift, stretch.",
+    tagline: "Built for the run, the lift, and the long stretch.",
     frameTitle: (
       <>
         Run with the <em>river.</em>
       </>
     ),
     frameBody:
-      "Lightweight Madurai cotton woven tight enough to wick, loose enough to breathe. The first mile is the test — the rest, a habit.",
+      "Lightweight Madurai cotton, woven to wick yet loose enough to breathe. The first mile is the test; the rest becomes habit.",
     pct: 25,
     accent: "#7A5C3A",
     image: asset("Sports wear.jpeg"),
@@ -90,15 +90,15 @@ export const TABS: TabDef[] = [
     key: "athleisure",
     label: "Athleisure",
     icon: Layers,
-    title: "Crossover — gym, street, dinner.",
-    tagline: "The crossover — gym to street to dinner without a costume change.",
+    title: "Crossover: gym, street, dinner.",
+    tagline: "Gym to street to dinner without a change of clothes.",
     frameTitle: (
       <>
         Move like water, <em>feel like air.</em>
       </>
     ),
     frameBody:
-      "Soft hands. Quiet seams. Fabrics that breathe and recover. A garment should disappear on the body and only be felt as confidence — that is the whole brief, written once and held forever.",
+      "Soft hand, quiet seams, fabrics that breathe and recover. The garment should disappear on the body and read only as ease. That is the brief: set once, kept every season.",
     pct: 88,
     accent: "#4A5C6A",
     image: asset("Athleisure.jpeg"),

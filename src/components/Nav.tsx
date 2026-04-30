@@ -9,6 +9,7 @@ const LINKS = [
   { href: "#vision", label: "Vision" as const, chevron: true },
   { href: "#different", label: "How we differ" as const, chevron: false },
   { href: "#promises", label: "Standards" as const, chevron: true },
+  { href: "#faq", label: "FAQ" as const, chevron: false },
   { href: "#journal", label: "Journal" as const, chevron: false },
 ];
 
@@ -46,7 +47,13 @@ export function Nav() {
       return;
     }
 
-    let io: IntersectionObserver;
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (e?.isIntersecting) settle("animate");
+      },
+      { threshold: 0.05, rootMargin: "0px" },
+    );
+
     const settle = (mode: "animate" | "instant") => {
       if (navRevealSettled.current) return;
       navRevealSettled.current = true;
@@ -54,12 +61,6 @@ export function Nav() {
       io.disconnect();
     };
 
-    io = new IntersectionObserver(
-      ([e]) => {
-        if (e?.isIntersecting) settle("animate");
-      },
-      { threshold: 0.05, rootMargin: "0px" },
-    );
     io.observe(hero);
 
     const rid = requestAnimationFrame(() => {
