@@ -1,6 +1,4 @@
 import { useLayoutEffect } from "react";
-import { Analytics } from "@vercel/analytics/react";
-import { SpeedInsights } from "@vercel/speed-insights/react";
 import { CTA } from "./components/CTA";
 import { Difference } from "./components/Difference";
 import { FaqSection } from "./components/FaqSection";
@@ -11,6 +9,7 @@ import { Promises } from "./components/Promises";
 import { SeoJsonLd } from "./components/SeoJsonLd";
 import { Standards } from "./components/Standards";
 import { Vision } from "./components/Vision";
+import { VercelMetrics } from "./components/VercelMetrics";
 
 function scrollToTop() {
   window.scrollTo(0, 0);
@@ -42,8 +41,7 @@ export default function App() {
         <CTA />
       </main>
       <Footer />
-      <Analytics />
-      <SpeedInsights />
+      <VercelMetrics />
     </>
   );
 }
