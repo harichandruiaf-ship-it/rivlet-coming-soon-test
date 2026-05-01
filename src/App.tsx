@@ -1,4 +1,5 @@
 import { useLayoutEffect } from "react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 import { CTA } from "./components/CTA";
 import { Difference } from "./components/Difference";
 import { FaqSection } from "./components/FaqSection";
@@ -40,6 +41,7 @@ export default function App() {
         <CTA />
       </main>
       <Footer />
+      <SpeedInsights />
     </>
   );
 }
