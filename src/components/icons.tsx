@@ -52,6 +52,15 @@ export function ArrowRight(p: IconBase) {
   );
 }
 
+export function ArrowLeft(p: IconBase) {
+  return (
+    <Base {...p}>
+      <line x1="19" y1="12" x2="5" y2="12" />
+      <polyline points="12 19 5 12 12 5" />
+    </Base>
+  );
+}
+
 export function Check(p: IconBase) {
   return (
     <Base {...p}>
