@@ -3,6 +3,7 @@ import { normalize, join } from "node:path";
 import { parse as parseDotenv } from "dotenv";
 import react from "@vitejs/plugin-react";
 import { defineConfig, loadEnv } from "vite";
+import { buildSiteIdentityJsonLd } from "./src/data/siteIdentitySchema";
 
 /** Same file order as Vite’s getEnvFilesForMode; later files override earlier. */
 function applyDotenvFilesFromDir(dir: string, mode: string) {
@@ -28,6 +29,16 @@ export default defineConfig(() => ({
     strictPort: true,
   },
   plugins: [
+    {
+      name: "rivlet-site-identity-jsonld",
+      transformIndexHtml(html) {
+        const json = JSON.stringify(buildSiteIdentityJsonLd());
+        return html.replace(
+          "</head>",
+          `<script type="application/ld+json" id="rivlet-site-identity">${json}</script>\n</head>`,
+        );
+      },
+    },
     {
       name: "rivlet-subscribe-api",
       enforce: "pre",
