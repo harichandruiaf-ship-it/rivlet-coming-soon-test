@@ -1122,7 +1122,15 @@
     .capture button{ min-height: 48px; width: 100%; border-radius: 12px; }
     .cta{ padding: 44px var(--page-pad) 52px; margin: 16px var(--page-pad) 20px; }
   }
-  .mdl-card{ max-height: min(90vh, 720px); overflow-y: auto; -webkit-overflow-scrolling: touch; align-self: center; }
+  .mdl-card{
+    max-height:min(90vh, 720px);
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
+    align-self:center;
+    scrollbar-width:none;
+    -ms-overflow-style:none;
+  }
+  .mdl-card::-webkit-scrollbar{display:none;width:0;height:0}
   @media (max-width: 480px){
     .mdl-card{ max-height: 92vh; width: 100%; }
     .mdl-overlay{ align-items: flex-end; padding-top: max(12px, env(safe-area-inset-top)); padding-bottom: max(12px, env(safe-area-inset-bottom)); padding-left: max(12px, env(safe-area-inset-left)); padding-right: max(12px, env(safe-area-inset-right)); }
