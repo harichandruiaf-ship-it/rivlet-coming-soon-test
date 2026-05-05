@@ -52,11 +52,13 @@ export function buildSiteIdentityJsonLd(): Record<string, unknown> {
       "https://linkedin.com/company/therivlet",
       "https://youtube.com/@therivlet",
     ],
-    makesOffer: [
-      { "@type": "Offer", itemOffered: { "@type": "Product", name: "Activewear" } },
-      { "@type": "Offer", itemOffered: { "@type": "Product", name: "Sportswear" } },
-      { "@type": "Offer", itemOffered: { "@type": "Product", name: "Athleisure" } },
-      { "@type": "Offer", itemOffered: { "@type": "Product", name: "Easy Wear" } },
+    /* Avoid stub `Product` nodes: Google Rich Results expects full Product markup (image, offers, …) and flags bare names as invalid product snippets. */
+    knowsAbout: [
+      "Premium activewear",
+      "Sportswear",
+      "Athleisure",
+      "Easy wear",
+      "Technical fabrics",
     ],
     brand: { "@id": BRAND_ID },
   };
