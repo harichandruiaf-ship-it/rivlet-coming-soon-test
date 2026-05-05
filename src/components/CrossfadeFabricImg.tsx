@@ -5,7 +5,16 @@ type Stack = { b: string; t: string; showT: boolean };
 /**
  * Two stacked images crossfade on `src` change — preload next frame before fading (no pop-in).
  */
-export function CrossfadeFabricImg({ src, alt }: { src: string; alt: string }) {
+export function CrossfadeFabricImg({
+  src,
+  alt,
+  fetchPriority,
+}: {
+  src: string;
+  alt: string;
+  /** Set `"high"` on the hero’s first fabric only (LCP / fetch budget). */
+  fetchPriority?: "high" | "low" | "auto";
+}) {
   const data = useRef<Stack>({ b: src, t: src, showT: false });
   const [, version] = useState(0);
   const bump = () => version((n) => n + 1);
@@ -60,6 +69,7 @@ export function CrossfadeFabricImg({ src, alt }: { src: string; alt: string }) {
         src={d.b}
         alt={alt}
         decoding="async"
+        fetchPriority={fetchPriority}
         style={{ opacity: d.showT ? 0 : 1, zIndex: d.showT ? 0 : 1 }}
       />
       <img
@@ -67,6 +77,7 @@ export function CrossfadeFabricImg({ src, alt }: { src: string; alt: string }) {
         src={d.t}
         alt={alt}
         decoding="async"
+        fetchPriority={fetchPriority === "high" ? "low" : fetchPriority}
         style={{ opacity: d.showT ? 1 : 0, zIndex: d.showT ? 1 : 0 }}
       />
     </span>

@@ -683,7 +683,7 @@
   .gap-strip .body{font-size:clamp(14px, 3.4vw, 16px);line-height:1.65;color:rgba(253,250,244,.78);max-width:48ch;text-wrap:pretty}
   .gap-strip .that{font-family:var(--serif);font-style:italic;font-size:clamp(18px, 4.5vw, 30px);color:var(--gold);letter-spacing:-0.01em}
   .gap-strip .seal{display:inline-flex;align-items:center;gap:14px;padding:10px 18px 10px 10px;border-radius:999px;background:rgba(253,250,244,.06);border:1px solid rgba(253,250,244,.14);font-family:var(--display);font-weight:500;font-size:clamp(13px, 3.2vw, 15px);color:var(--bg);align-self:flex-start}
-  .gap-strip .seal .av{width:30px;height:30px;border-radius:50%;background:radial-gradient(circle at 30% 30%, #c4963a 0%, #8a6a2a 45%, #0E0B07 100%);display:inline-flex;align-items:center;justify-content:center;color:#fff;font-family:var(--serif);font-style:italic;font-size:13px;font-weight:500;box-shadow:0 0 0 1px rgba(196,150,58,.45), 0 0 12px rgba(196,150,58,.4)}
+  .gap-strip .seal .av{width:30px;height:30px;border-radius:50%;background:radial-gradient(circle at 30% 30%, #c4963a 0%, #8a6a2a 45%, #0E0B07 100%);display:inline-flex;align-items:center;justify-content:center;color:#fff;font-family:var(--serif);font-style:italic;font-size:13px;font-weight:400;box-shadow:0 0 0 1px rgba(196,150,58,.45), 0 0 12px rgba(196,150,58,.4)}
   @media (max-width:900px){
     .gap-strip{grid-template-columns:1fr;gap:clamp(22px, 4vw, 32px)}
   }

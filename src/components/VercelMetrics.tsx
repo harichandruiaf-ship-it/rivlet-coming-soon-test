@@ -28,7 +28,7 @@ export function VercelMetrics() {
     let cancelScheduled: (() => void) | undefined;
 
     if (typeof window.requestIdleCallback === "function") {
-      const idleId = window.requestIdleCallback(load, { timeout: 4000 });
+      const idleId = window.requestIdleCallback(load, { timeout: 6000 });
       cancelScheduled = () => {
         if (typeof window.cancelIdleCallback === "function") window.cancelIdleCallback(idleId);
       };

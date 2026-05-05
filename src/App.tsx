@@ -1,15 +1,16 @@
-import { useLayoutEffect } from "react";
-import { CTA } from "./components/CTA";
-import { Difference } from "./components/Difference";
-import { FaqSection } from "./components/FaqSection";
-import { Footer } from "./components/Footer";
+import { lazy, Suspense, useLayoutEffect } from "react";
 import { Hero } from "./components/Hero";
 import { Nav } from "./components/Nav";
-import { Promises } from "./components/Promises";
 import { SeoJsonLd } from "./components/SeoJsonLd";
-import { Standards } from "./components/Standards";
-import { Vision } from "./components/Vision";
 import { VercelMetrics } from "./components/VercelMetrics";
+
+const Difference = lazy(() => import("./components/Difference").then((m) => ({ default: m.Difference })));
+const Vision = lazy(() => import("./components/Vision").then((m) => ({ default: m.Vision })));
+const Promises = lazy(() => import("./components/Promises").then((m) => ({ default: m.Promises })));
+const Standards = lazy(() => import("./components/Standards").then((m) => ({ default: m.Standards })));
+const FaqSection = lazy(() => import("./components/FaqSection").then((m) => ({ default: m.FaqSection })));
+const CTA = lazy(() => import("./components/CTA").then((m) => ({ default: m.CTA })));
+const Footer = lazy(() => import("./components/Footer").then((m) => ({ default: m.Footer })));
 
 function scrollToTop() {
   window.scrollTo(0, 0);
@@ -33,14 +34,18 @@ export default function App() {
       </header>
       <main id="main">
         <Hero />
-        <Difference />
-        <Vision />
-        <Promises />
-        <Standards />
-        <FaqSection />
-        <CTA />
+        <Suspense fallback={null}>
+          <Difference />
+          <Vision />
+          <Promises />
+          <Standards />
+          <FaqSection />
+          <CTA />
+        </Suspense>
       </main>
-      <Footer />
+      <Suspense fallback={null}>
+        <Footer />
+      </Suspense>
       <VercelMetrics />
     </>
   );

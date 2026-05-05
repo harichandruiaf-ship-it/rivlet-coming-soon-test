@@ -23,6 +23,19 @@ function applyDotenvFilesFromDir(dir: string, mode: string) {
 }
 
 export default defineConfig(() => ({
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (!id.includes("node_modules")) return undefined;
+          if (id.includes("firebase")) return "firebase";
+          if (id.includes("@vercel")) return "vercel-insights";
+          if (id.includes("react-dom") || id.includes("/react/")) return "react-vendor";
+          return "vendor";
+        },
+      },
+    },
+  },
   server: {
     port: 5173,
     // Fail fast if 5173 is still taken (e.g. old `npm run dev` in another terminal) instead of jumping to 5174+.

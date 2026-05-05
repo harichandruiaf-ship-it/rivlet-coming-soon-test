@@ -1,7 +1,5 @@
-import { getApp, getApps, initializeApp, type FirebaseApp } from "firebase/app";
-import { getAnalytics, isSupported, type Analytics } from "firebase/analytics";
-
-import type { FirebaseOptions } from "firebase/app";
+import type { Analytics } from "firebase/analytics";
+import type { FirebaseApp, FirebaseOptions } from "firebase/app";
 
 let app: FirebaseApp | null = null;
 let analytics: Analytics | null = null;
@@ -28,30 +26,31 @@ function readConfig(): FirebaseOptions | null {
 }
 
 /**
- * Call once on startup. Initializes the modular web SDK; enables Analytics when supported.
+ * Call once after idle. Dynamic-imports the SDK so the main bundle stays smaller for Lighthouse.
  * Does nothing if VITE_FIREBASE_API_KEY / VITE_FIREBASE_APP_ID are missing (e.g. local .env not created).
  */
-export function initFirebaseClient(): void {
+export async function initFirebaseClient(): Promise<void> {
   if (import.meta.env.SSR) return;
 
   const options = readConfig();
   if (!options) {
     if (import.meta.env.DEV) {
       console.warn(
-        "[firebase] Client not initialized: set VITE_FIREBASE_* in .env.local (see .env.example)."
+        "[firebase] Client not initialized: set VITE_FIREBASE_* in .env.local (see .env.example).",
       );
     }
     return;
   }
 
+  const { getApp, getApps, initializeApp } = await import("firebase/app");
+  const { getAnalytics, isSupported } = await import("firebase/analytics");
+
   app = getApps().length > 0 ? getApp() : initializeApp(options);
 
-  void (async () => {
-    if (!app) return;
-    if (await isSupported()) {
-      analytics = getAnalytics(app);
-    }
-  })();
+  if (!app) return;
+  if (await isSupported()) {
+    analytics = getAnalytics(app);
+  }
 }
 
 export function getFirebaseApp(): FirebaseApp | null {

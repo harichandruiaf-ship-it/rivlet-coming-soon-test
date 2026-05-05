@@ -115,7 +115,7 @@ export function Hero() {
           <div className="hero-fabric-cluster" aria-hidden="true">
             <div className="hero-fabric-left-ledge">
               <div className="hero-fabric hero-fabric--cutout hero-fabric--left">
-                <CrossfadeFabricImg src={fabLeft} alt={fabricVisualAlt} />
+                <CrossfadeFabricImg src={fabLeft} alt={fabricVisualAlt} fetchPriority="high" />
               </div>
             </div>
             <div className="hero-fabric-float">
