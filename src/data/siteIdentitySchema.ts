@@ -8,14 +8,16 @@ const ORG_ID = `${SITE_ORIGIN}/#organization`;
 const WEB_ID = `${SITE_ORIGIN}/#website`;
 const BRAND_ID = `${SITE_ORIGIN}/#brand`;
 
-/** Same entity definitions as previously in SeoJsonLd; logo as ImageObject for Google site name signals. */
+/** Organization + Brand + WebSite in one @graph for crawlers (inlined in document head). Google site name uses WebSite.name. */
 export function buildSiteIdentityJsonLd(): Record<string, unknown> {
+  const homeUrl = `${SITE_ORIGIN}/`;
+
   const organization = {
     "@type": "Organization",
     "@id": ORG_ID,
     name: "Rivlet",
-    alternateName: "Rivlet Activewear",
-    url: SITE_ORIGIN,
+    alternateName: ["Rivlet Activewear", "Rivlet India"],
+    url: homeUrl,
     logo: {
       "@type": "ImageObject",
       url: `${SITE_ORIGIN}/logo.png`,
@@ -59,18 +61,32 @@ export function buildSiteIdentityJsonLd(): Record<string, unknown> {
     brand: { "@id": BRAND_ID },
   };
 
+  const brandEntity = {
+    "@type": "Brand",
+    "@id": BRAND_ID,
+    name: "Rivlet",
+    alternateName: ["Rivlet Activewear", "Rivlet India"],
+    description:
+      "Premium Indian activewear, sportswear, athleisure and easy wear brand. Six proprietary fabric technologies. Built without compromise.",
+    logo: `${SITE_ORIGIN}/logo.png`,
+    url: homeUrl,
+    slogan: "Move like water. Feel like air.",
+  };
+
   const website = {
     "@type": "WebSite",
     "@id": WEB_ID,
-    url: SITE_ORIGIN,
+    url: homeUrl,
     name: "Rivlet",
+    alternateName: ["Rivlet Activewear", "Rivlet India"],
     description: "Premium Indian activewear, sportswear, athleisure and easy wear, coming 2026",
     publisher: { "@id": ORG_ID },
+    about: { "@id": ORG_ID },
     inLanguage: "en-IN",
   };
 
   return {
     "@context": "https://schema.org",
-    "@graph": [organization, website],
+    "@graph": [organization, brandEntity, website],
   };
 }

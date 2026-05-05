@@ -1,7 +1,6 @@
 import { FAQ_ITEMS, SITE_ORIGIN } from "../data/seoFaq";
 
 const LOCAL_ID = `${SITE_ORIGIN}/#localbusiness`;
-const BRAND_ID = `${SITE_ORIGIN}/#brand`;
 
 function buildGraph() {
   const faqPage = {
@@ -40,21 +39,9 @@ function buildGraph() {
     areaServed: ["India", "United Kingdom", "United Arab Emirates", "Singapore", "United States", "Europe"],
   };
 
-  const brand = {
-    "@type": "Brand",
-    "@id": BRAND_ID,
-    name: "Rivlet",
-    alternateName: ["Rivlet Activewear", "Rivlet India"],
-    description:
-      "Premium Indian activewear, sportswear, athleisure and easy wear brand. Six proprietary fabric technologies. Built without compromise.",
-    logo: `${SITE_ORIGIN}/logo.png`,
-    url: SITE_ORIGIN,
-    slogan: "Move like water. Feel like air.",
-  };
-
   return {
     "@context": "https://schema.org",
-    "@graph": [faqPage, localBusiness, brand],
+    "@graph": [faqPage, localBusiness],
   };
 }
 
