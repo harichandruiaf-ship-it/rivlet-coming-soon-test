@@ -37,7 +37,12 @@ export function Footer() {
           <h4>Elsewhere</h4>
           <ul>
             <li>
-              <a href="#" aria-label="Instagram (link placeholder)">
+              <a
+                href="https://www.instagram.com/rivletindia/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Rivlet on Instagram"
+              >
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
                   <rect x="3" y="3" width="18" height="18" rx="5" />
                   <circle cx="12" cy="12" r="4" />
@@ -47,7 +52,12 @@ export function Footer() {
               </a>
             </li>
             <li>
-              <a href="#" aria-label="YouTube (link placeholder)">
+              <a
+                href="https://www.youtube.com/channel/UCfSh7zi2goRuzoB4-_YC_eQ"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Rivlet on YouTube"
+              >
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-2C18.88 4 12 4 12 4s-6.88 0-8.59.42a2.78 2.78 0 0 0-1.95 2A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 2C5.12 20 12 20 12 20s6.88 0 8.59-.42a2.78 2.78 0 0 0 1.95-2A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z" />
                   <polygon points="9.75,15.02 15.5,12 9.75,8.98" fill="currentColor" stroke="none" />
@@ -56,7 +66,12 @@ export function Footer() {
               </a>
             </li>
             <li>
-              <a href="#" aria-label="LinkedIn (link placeholder)">
+              <a
+                href="https://www.linkedin.com/company/rivlet/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Rivlet on LinkedIn"
+              >
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z" />
                   <rect x="2" y="9" width="4" height="12" />

@@ -47,10 +47,9 @@ export function buildSiteIdentityJsonLd(): Record<string, unknown> {
       },
     ],
     sameAs: [
-      "https://instagram.com/therivlet",
-      "https://facebook.com/therivlet",
-      "https://linkedin.com/company/therivlet",
-      "https://youtube.com/@therivlet",
+      "https://www.instagram.com/rivletindia/",
+      "https://www.linkedin.com/company/rivlet/",
+      "https://www.youtube.com/channel/UCfSh7zi2goRuzoB4-_YC_eQ",
     ],
     /* Avoid stub `Product` nodes: Google Rich Results expects full Product markup (image, offers, …) and flags bare names as invalid product snippets. */
     knowsAbout: [
