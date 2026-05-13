@@ -492,11 +492,18 @@
   }
   .ed-frame .bg-img{
     position:absolute;inset:0;
-    background-image:url("/assets/fabric-1.jpg");
-    background-size:cover;background-position:center;
-    filter:saturate(.85) brightness(.78) contrast(1.05);
-    transform:scale(1.05);animation:slowDrift 22s ease-in-out infinite alternate;
+    overflow:hidden;
     transition:opacity .8s ease;
+  }
+  .ed-frame .bg-img img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    object-position:center;
+    display:block;
+    filter:saturate(.85) brightness(.78) contrast(1.05);
+    transform:scale(1.05);
+    animation:slowDrift 22s ease-in-out infinite alternate;
   }
   @keyframes slowDrift{0%{transform:scale(1.05) translate3d(0,0,0)}100%{transform:scale(1.10) translate3d(-1.5%,-1%,0)}}
   .ed-frame .tint{
@@ -775,7 +782,16 @@
     display:flex;flex-direction:column;justify-content:space-between;gap:24px;position:relative;overflow:hidden;
     transition:border-color .4s ease, transform .4s ease, box-shadow .4s ease;isolation:isolate;color:var(--bg);
   }
-  .fab-card .bg{position:absolute;inset:0;background-size:cover;background-position:center;z-index:-2;transition:transform 1.2s ease}
+  .fab-card .bg{position:absolute;inset:0;z-index:-2;transition:transform 1.2s ease;overflow:hidden}
+  .fab-card .bg img{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    object-position:center;
+    display:block;
+  }
   .fab-card .scrim{position:absolute;inset:0;background:linear-gradient(180deg, rgba(14,11,7,.10) 0%, rgba(14,11,7,.45) 55%, rgba(14,11,7,.78) 100%);z-index:-1}
   .fab-card:hover{border-color:rgba(196,150,58,.55);transform:translateY(-4px);box-shadow:0 20px 60px -30px rgba(14,11,7,.4)}
   .fab-card:hover .bg{transform:scale(1.06)}

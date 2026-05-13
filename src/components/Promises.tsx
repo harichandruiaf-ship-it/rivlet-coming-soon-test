@@ -85,7 +85,9 @@ export function Promises() {
           <div className="fab-track">
             {loop.map((t, i) => (
               <div className="fab-card" key={i}>
-                <div className="bg" style={{ backgroundImage: `url("${t.bg}")` }} />
+                <div className="bg" aria-hidden>
+                  <img src={t.bg} alt="" loading="lazy" decoding="async" />
+                </div>
                 <div className="scrim" />
                 <div>
                   <div className="num">{t.n}</div>

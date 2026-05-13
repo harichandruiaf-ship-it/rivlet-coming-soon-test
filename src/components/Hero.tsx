@@ -115,15 +115,15 @@ export function Hero() {
           <div className="hero-fabric-cluster" aria-hidden="true">
             <div className="hero-fabric-left-ledge">
               <div className="hero-fabric hero-fabric--cutout hero-fabric--left">
-                <CrossfadeFabricImg src={fabLeft} alt={fabricVisualAlt} fetchPriority="high" />
+                <CrossfadeFabricImg src={fabLeft} alt={fabricVisualAlt} />
               </div>
             </div>
             <div className="hero-fabric-float">
               <div className="hero-fabric hero-fabric--cutout hero-fabric--top">
-                <CrossfadeFabricImg src={fabTop} alt={fabricVisualAlt} />
+                <CrossfadeFabricImg src={fabTop} alt={fabricVisualAlt} fetchPriority="low" />
               </div>
               <div className="hero-fabric hero-fabric--cutout hero-fabric--right">
-                <CrossfadeFabricImg src={fabRight} alt={fabricVisualAlt} />
+                <CrossfadeFabricImg src={fabRight} alt={fabricVisualAlt} fetchPriority="low" />
               </div>
             </div>
           </div>
@@ -170,10 +170,15 @@ export function Hero() {
             </div>
 
             <div className="ed-frame" key={tab}>
-              <div
-                className="bg-img"
-                style={{ backgroundImage: `url("${active.image}")` }}
-              />
+              <div className="bg-img">
+                <img
+                  src={active.image}
+                  alt=""
+                  decoding="async"
+                  fetchPriority={tab === "active" ? "high" : "low"}
+                  loading="eager"
+                />
+              </div>
               <div className="tint" />
               <div className="ed-inner">
                 <div className="ed-eyebrow">Featured · {active.label}</div>
