@@ -169,18 +169,15 @@ export function Hero() {
               })}
             </div>
 
-            <div className="ed-frame" key={tab}>
-              <div className="bg-img">
-                <img
-                  src={active.image}
-                  alt=""
-                  decoding="async"
-                  fetchPriority={tab === "active" ? "high" : "low"}
-                  loading="eager"
-                />
-              </div>
+            <div className="ed-frame">
+              <CrossfadeFabricImg
+                variant="frame"
+                src={active.image}
+                alt=""
+                fetchPriority={tab === "active" ? "high" : "low"}
+              />
               <div className="tint" />
-              <div className="ed-inner">
+              <div className="ed-inner ed-inner--tab-anim" key={tab}>
                 <div className="ed-eyebrow">Featured · {active.label}</div>
                 <div className="ed-h">{active.frameTitle}</div>
                 <div className="ed-body">{active.frameBody}</div>

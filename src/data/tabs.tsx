@@ -45,7 +45,7 @@ export const TABS: TabDef[] = [
       "Lightweight Madurai cotton, woven to wick yet loose enough to breathe. The first mile is the test; the rest becomes habit.",
     pct: 25,
     accent: "#7A5C3A",
-    image: asset("Sports wear.jpeg"),
+    image: asset("Sports wear.webp"),
     heroFloats: {
       left: floatPng("Sports left.png"),
       top: floatPng("Sports top.png"),
@@ -73,7 +73,7 @@ export const TABS: TabDef[] = [
       "Salt-tested seams, four-way stretch, recovery on cycle fifty. We don't write specs we can't keep on the second wash.",
     pct: 67,
     accent: "#C4963A",
-    image: asset("Performance.jpeg"),
+    image: asset("Performance.webp"),
     heroFloats: {
       left: floatPng("Performance left.png"),
       top: floatPng("Performance top.png"),
@@ -101,7 +101,7 @@ export const TABS: TabDef[] = [
       "Soft hand, quiet seams, fabrics that breathe and recover. The garment should disappear on the body and read only as ease. That is the brief: set once, kept every season.",
     pct: 88,
     accent: "#4A5C6A",
-    image: asset("Athleisure.jpeg"),
+    image: asset("Athleisure.webp"),
     heroFloats: {
       left: floatPng("Athleisure left.png"),
       top: floatPng("Athleisure top.png"),
@@ -129,7 +129,7 @@ export const TABS: TabDef[] = [
       "Garment-washed Madurai cotton, lived-in cuts, travel-folded dimensions. Carry-on optimised. Built to wear in, never out.",
     pct: 100,
     accent: "#3e6b34",
-    image: asset("Easy wear.jpeg"),
+    image: asset("Easy wear.webp"),
     heroFloats: {
       left: floatPng("Easy wear left.png"),
       top: floatPng("Easy wear top.png"),

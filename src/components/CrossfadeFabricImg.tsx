@@ -2,6 +2,21 @@ import { useEffect, useRef, useState } from "react";
 
 type Stack = { b: string; t: string; showT: boolean };
 
+const VARIANT = {
+  fabric: {
+    stack: "hero-fabric-stack",
+    instant: "hero-fabric-stack--instant",
+    layer: "hero-fabric-layer",
+  },
+  frame: {
+    stack: "ed-frame-xfade",
+    instant: "ed-frame-xfade--instant",
+    layer: "ed-frame-xfade-layer",
+  },
+} as const;
+
+type Variant = keyof typeof VARIANT;
+
 /**
  * Two stacked images crossfade on `src` change — preload next frame before fading (no pop-in).
  * When both layers show the same URL (initial mount), render a single `<img>` so the browser does not request the same asset twice.
@@ -10,12 +25,16 @@ export function CrossfadeFabricImg({
   src,
   alt,
   fetchPriority,
+  variant = "fabric",
 }: {
   src: string;
   alt: string;
   /** Set `"high"` on the hero’s first fabric only (LCP / fetch budget). */
   fetchPriority?: "high" | "low" | "auto";
+  /** `frame` = full-bleed wardrobe image in `.ed-frame` (uses `.ed-frame-xfade*` CSS). */
+  variant?: Variant;
 }) {
+  const { stack, instant, layer } = VARIANT[variant];
   const data = useRef<Stack>({ b: src, t: src, showT: false });
   const [, version] = useState(0);
   const bump = () => version((n) => n + 1);
@@ -60,38 +79,38 @@ export function CrossfadeFabricImg({
   }, [src]);
 
   const d = data.current;
-  const instant =
+  const prefersReducedMotion =
     typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const sameUrl = d.b === d.t;
+  const stackClass = stack + (prefersReducedMotion ? ` ${instant}` : "");
+
+  const vis = (onBottom: boolean) => (onBottom ? !d.showT : d.showT);
 
   return (
-    <span className={"hero-fabric-stack" + (instant ? " hero-fabric-stack--instant" : "")}>
+    <span className={stackClass}>
       {sameUrl ? (
         <img
-          className="hero-fabric-layer"
+          className={`${layer} crossfade-visible`}
           src={d.b}
           alt={alt}
           decoding="async"
           fetchPriority={fetchPriority}
-          style={{ opacity: 1, zIndex: 1 }}
         />
       ) : (
         <>
           <img
-            className="hero-fabric-layer"
+            className={`${layer} ${vis(true) ? "crossfade-visible" : "crossfade-hidden"}`}
             src={d.b}
             alt={alt}
             decoding="async"
             fetchPriority={fetchPriority}
-            style={{ opacity: d.showT ? 0 : 1, zIndex: d.showT ? 0 : 1 }}
           />
           <img
-            className="hero-fabric-layer"
+            className={`${layer} ${vis(false) ? "crossfade-visible" : "crossfade-hidden"}`}
             src={d.t}
             alt={alt}
             decoding="async"
             fetchPriority={fetchPriority === "high" ? "low" : fetchPriority}
-            style={{ opacity: d.showT ? 1 : 0, zIndex: d.showT ? 1 : 0 }}
           />
         </>
       )}
